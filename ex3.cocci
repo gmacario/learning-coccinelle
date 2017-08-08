@@ -1,9 +1,13 @@
-@@
-expression E1, E2, E3;
-@@
-
+@@ expression E1, E2, E3; @@
 - pci_map_single(E1,
-+ dma_map_single(
-+    &E1->dev,
++ dma_map_single(&E1->dev,
      E2, E3,
-     PCI_DMA_FROMDEVICE)
+-    PCI_DMA_FROMDEVICE)
++    DMA_FROM_DEVICE)
+
+@@ expression E1, E2, E3; @@
+- pci_map_single(E1,
++ dma_map_single(&E1->dev,
+     E2, E3,
+-    PCI_DMA_TODEVICE)
++    DMA_TO_DEVICE)
