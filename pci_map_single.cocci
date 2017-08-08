@@ -1,7 +1,10 @@
-@@ expression E1, E2, E3; @@
+@@ expression E1, E2, E3, E4; @@
 - pci_map_single(E1,
 + dma_map_single(&E1->dev,
-     E2, E3,
+     E2, E3, E4)
+
+@@ expression E1, E2, E3; @@
+  dma_map_single(E1, E2, E3,
 (
 -    PCI_DMA_BIDIRECTIONAL
 +    DMA_BIDIRECTIONAL
