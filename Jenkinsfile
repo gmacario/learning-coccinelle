@@ -8,12 +8,13 @@ pipeline {
   stages {
    stage('Checkout from git') {
       steps {
-        sh '''#!/bin/bash
+        sh '''#!/bin/bash -xe
 
 # DEBUG
 id
 pwd
 ls -la
+printenv | sort
 
 cd && [ ! -e linux-mainline ] && git clone https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git linux-mainline
 cd ~/linux-mainline && git fetch --all --prune
@@ -26,8 +27,10 @@ cd ~/linux-mainline && git fetch --all --prune
         sh '''#!/bin/bash -xe
 
 # DEBUG
+id
 pwd
 ls -la
+printenv | sort
 
 cd linux-mainline
 
