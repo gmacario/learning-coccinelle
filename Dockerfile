@@ -8,6 +8,6 @@ RUN apt-get update && \
 RUN apt-get -y install coccinelle
 
 # Verify Coccinelle installation
-spatch --version
+RUN spatch --version
 
 # EOF
