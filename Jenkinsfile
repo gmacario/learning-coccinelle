@@ -6,13 +6,7 @@ pipeline {
     
   }
   stages {
-    stage('Check') {
-      steps {
-        sh 'spatch --version'
-        echo 'TODO: make coccicheck'
-      }
-    }
-    stage('Checkout from git') {
+   stage('Checkout from git') {
       steps {
         sh '''#!/bin/bash
 
@@ -27,5 +21,11 @@ cd ~/linux-mainline && git fetch --all --prune
 # EOF'''
       }
     }
+    stage('Semantic Checks') {
+      steps {
+        sh 'spatch --version'
+        echo 'TODO: make coccicheck'
+      }
+    }
   }
-}
+ }
