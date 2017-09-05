@@ -8,7 +8,8 @@ pipeline {
   stages {
     stage('Check') {
       steps {
-        sh 'echo TODO: make coccicheck'
+        sh 'spatch --version'
+        echo 'TODO: make coccicheck'
       }
     }
   }
