@@ -14,8 +14,17 @@ pipeline {
     }
     stage('Checkout from git') {
       steps {
-        sh '''cd && [ ! -e linux-mainline ] && git clone https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git linux-mainline
-cd ~/linux-mainline && git fetch --all --prune'''
+        sh '''#!/bin/bash
+
+# DEBUG
+id
+pwd
+ls -la
+
+cd && [ ! -e linux-mainline ] && git clone https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git linux-mainline
+cd ~/linux-mainline && git fetch --all --prune
+
+# EOF'''
       }
     }
   }
