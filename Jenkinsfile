@@ -40,7 +40,7 @@ ls -la scripts
 ls -la scripts/coccinelle
 spatch --version
 
-make coccicheck
+make coccicheck || true
 
 # EOF'''
       }
