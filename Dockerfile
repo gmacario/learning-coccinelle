@@ -2,7 +2,8 @@ FROM ubuntu:16.04
 
 RUN apt-get update && \
   apt-get -y dist-upgrade && \
-  apt-get -y install curl git
+  apt-get -y install curl git && \
+  apt-get -y install build-essential make
 
 # Install Coccinelle (pre-packaged)
 RUN apt-get -y install coccinelle
