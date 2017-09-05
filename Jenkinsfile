@@ -37,7 +37,7 @@ cd linux-mainline
 # DEBUG
 ls -la
 ls -la scripts
-ls -la scripts/cocci
+ls -la scripts/coccinelle
 spatch --version
 
 make coccicheck
