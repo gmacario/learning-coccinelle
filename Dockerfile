@@ -11,4 +11,7 @@ RUN apt-get -y install coccinelle
 # Verify Coccinelle installation
 RUN spatch --version
 
+# Create user "jenkins"
+RUN id jenkins 2>/dev/null || useradd --uid 1000 --create-home jenkins
+
 # EOF
