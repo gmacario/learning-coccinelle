@@ -23,8 +23,19 @@ cd ~/linux-mainline && git fetch --all --prune
     }
     stage('Semantic Checks') {
       steps {
-        sh 'spatch --version'
-        echo 'TODO: make coccicheck'
+        sh '''#!/bin/bash -xe
+
+cd linux-mainline
+
+# DEBUG
+ls -la
+ls -la scripts
+ls -la scripts/cocci
+spatch --version
+
+make coccicheck
+
+# EOF'''
       }
     }
   }
