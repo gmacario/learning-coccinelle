@@ -25,6 +25,10 @@ cd ~/linux-mainline && git fetch --all --prune
       steps {
         sh '''#!/bin/bash -xe
 
+# DEBUG
+pwd
+ls -la
+
 cd linux-mainline
 
 # DEBUG
