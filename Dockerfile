@@ -9,9 +9,9 @@ RUN apt-get update && \
 # RUN apt-get -y install coccinelle
 
 # Install Coccinelle from sources
-RUN apt-get -y build-dep coccinelle
-RUN apt-get -y install autoconf
-RUN git clone https://github.com/coccinelle/coccinelle && \
+RUN apt-get -y build-dep coccinelle && \
+  apt-get -y install autoconf && \
+  git clone https://github.com/coccinelle/coccinelle && \
   cd coccinelle && \
   autoreconf -i && \
   ./configure && \
