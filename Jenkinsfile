@@ -8,12 +8,18 @@ pipeline {
     string(name: 'GIT_URL', defaultValue: 'https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git', description: 'Git URL')
     string(name: 'GIT_BRANCH', defaultValue: 'master', description: 'Git branch')
     string(name: 'GIT_TAG', defaultValue: '', description: 'Git tag')
-    // TODO
+    //
+    string(name: 'CK_SUBDIR', defaultValue: 'kernel/sched', description: 'Linux subdirectory to check')
+    string(name: 'CK_COCCI', defaultValue: 'scripts/coccinelle/null/badzero.cocci', description: 'Semantic patch to apply')
+    string(name: 'CK_MODE', defaultValue: 'report', description: 'coccicheck mode (report|patch|context|chain|org|...)')
   }
   environment {
     GIT_URL = "${params.GIT_URL}"
     GIT_BRANCH = "${params.GIT_BRANCH}"
     GIT_TAG = "${params.GIT_TAG}"
+    CK_SUBDIR = "${params.CK_SUBDIR}"
+    CK_COCCI = "${params.CK_COCCI}"
+    CK_MODE = "${params.CK_MODE}"
   }
   stages {
    stage('Checkout from git') {
@@ -59,8 +65,11 @@ spatch --version
 git status
 git show -s
 
-# Run a specific semantic patch on a specific module
-make coccicheck M=kernel/sched COCCICHECK=scripts/coccinelle/null/badzero.cocci MODE=report
+# Parameterized check
+make coccicheck M=${CK_SUBDIR} COCCICHECK=${CK_COCCI} MODE=${CK_MODE}
+
+## Run a specific semantic patch on a specific module
+# make coccicheck M=kernel/sched COCCICHECK=scripts/coccinelle/null/badzero.cocci MODE=report
 
 ## Run all semantic patches against the whole Linux kernel source tree
 ## WARNING: On ies-genbld01-ub16 it will take a few days to complete!
