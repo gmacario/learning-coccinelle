@@ -7,6 +7,7 @@ pipeline {
   parameters {
     string(name: 'GIT_URL', defaultValue: 'https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git', description: 'Git URL')
     string(name: 'GIT_BRANCH', defaultValue: 'master', description: 'Git branch')
+    string(name: 'GIT_TAG', defaultValue: '', description: 'Git tag')
     // TODO
   }
   environment {
@@ -24,8 +25,10 @@ pwd
 ls -la
 printenv | sort
 
-[ ! -e linux-mainline ] && git clone -b ${GIT_BRANCH} ${GIT_URL} linux-mainline
-cd linux-mainline && git checkout ${GIT_BRANCH} && git pull --all --prune
+[ ! -e linux-mainline ] && git clone ${GIT_URL} linux-mainline
+cd linux-mainline && git fetch --all --prune
+[ "${GIT_BRANCH}" != "" ] && git checkout ${GIT_BRANCH} && git pull
+[ "${GIT_TAG}" != "" ] && git checkout ${GIT_TAG} 
 
 # EOF'''
       }
