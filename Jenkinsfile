@@ -43,7 +43,7 @@ spatch --version
 git show -s
 
 # Run a specific semantic patch on a specific module
-make coccicheck M=kernel/sched COCCICHECK=scripts/coccinelle/badzero.cocci MODE=report
+make coccicheck M=kernel/sched COCCICHECK=scripts/coccinelle/null/badzero.cocci MODE=report
 
 ## Run all semantic patches against the whole Linux kernel source tree
 ## WARNING: On ies-genbld01-ub16 it will take a few days to complete!
