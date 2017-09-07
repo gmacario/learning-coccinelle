@@ -40,6 +40,7 @@ ls -la scripts
 # ls -la scripts/coccinelle
 find scripts/coccinelle -name "*.cocci" -ls
 spatch --version
+git show -s
 
 # Run a specific semantic patch on a specific module
 make coccicheck M=kernel/sched COCCICHECK=scripts/coccinelle/badzero.cocci MODE=report
