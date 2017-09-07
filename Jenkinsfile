@@ -28,8 +28,12 @@ printenv | sort
 
 [ ! -e linux-mainline ] && git clone ${GIT_URL} linux-mainline
 cd linux-mainline && git fetch --all --prune
-[ "${GIT_BRANCH}" != "" ] && git checkout ${GIT_BRANCH} && git pull
-[ "${GIT_TAG}" != "" ] && git checkout ${GIT_TAG} 
+if [ "${GIT_BRANCH}" != "" ]; then
+  git checkout ${GIT_BRANCH} && git pull
+fi
+if [ "${GIT_TAG}" != "" ]; then
+  git checkout ${GIT_TAG};
+fi
 
 # EOF'''
       }
