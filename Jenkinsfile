@@ -26,8 +26,8 @@ pwd
 ls -la
 printenv | sort
 
-[ ! -e linux-mainline ] && git clone https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git linux-mainline
-cd linux-mainline && git fetch --all --prune
+[ ! -e linux-mainline ] && git clone -b ${GIT_BRANCH} ${GIT_URL} linux-mainline
+cd linux-mainline && git checkout ${GIT_BRANCH} && git pull --all --prune
 
 # EOF'''
       }
@@ -50,6 +50,7 @@ ls -la scripts
 # ls -la scripts/coccinelle
 find scripts/coccinelle -name "*.cocci" -ls
 spatch --version
+git status
 git show -s
 
 # Run a specific semantic patch on a specific module
