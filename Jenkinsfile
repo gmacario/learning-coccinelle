@@ -3,8 +3,14 @@ pipeline {
     dockerfile {
       filename 'Dockerfile'
     }
-    
   }
+  parameters {
+    // string(name: 'GITHUB_USER', defaultValue: 'torvalds', description: 'GitHub username or organization')
+    // string(name: 'GITHUB_REPO', defaultValue: 'linux', description: 'GitHub repository')
+    string(name: 'GIT_URL', defaultValue: 'https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git', description: 'Git URL')
+    string(name: 'GIT_BRANCH', defaultValue: 'master', description: 'Git branch')
+    // TODO
+  }    
   stages {
    stage('Checkout from git') {
       steps {
