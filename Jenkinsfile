@@ -57,8 +57,8 @@ printenv | sort
 cd linux-mainline
 
 # DEBUG
-ls -la
-ls -la scripts
+# ls -la
+# ls -la scripts
 # ls -la scripts/coccinelle
 find scripts/coccinelle -name "*.cocci" -ls
 spatch --version
