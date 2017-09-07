@@ -68,7 +68,7 @@ git show -s
 # Parameterized check
 make coccicheck M=${CK_SUBDIR} COCCICHECK=${CK_COCCI} MODE=${CK_MODE}
 
-## Run a specific semantic patch on a specific module
+## Run one semantic patch against one Linux source subdir
 # make coccicheck M=kernel/sched COCCICHECK=scripts/coccinelle/null/badzero.cocci MODE=report
 
 ## Run all semantic patches against the whole Linux kernel source tree
