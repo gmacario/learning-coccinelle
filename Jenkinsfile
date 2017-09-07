@@ -13,6 +13,7 @@ pipeline {
   environment {
     GIT_URL = "${params.GIT_URL}"
     GIT_BRANCH = "${params.GIT_BRANCH}"
+    GIT_TAG = "${params.GIT_TAG}"
   }
   stages {
    stage('Checkout from git') {
