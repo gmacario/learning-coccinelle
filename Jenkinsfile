@@ -33,6 +33,7 @@ ls -la
 printenv | sort
 
 [ ! -e linux-mainline ] && git clone ${GIT_URL} linux-mainline
+# FIXME: Should handle case where git clone was done with a different GIT_URL
 cd linux-mainline && git fetch --all --prune
 if [ "${GIT_BRANCH}" != "" ]; then
   git checkout ${GIT_BRANCH} && git pull
