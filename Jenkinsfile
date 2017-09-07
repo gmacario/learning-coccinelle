@@ -5,7 +5,9 @@ pipeline {
     }
   }
   parameters {
-    string(name: 'GIT_URL', defaultValue: 'https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git', description: 'Git URL')
+    // linux-mainline: 'https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git'
+    // linux-stable: 'https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git'
+    string(name: 'GIT_URL', defaultValue: 'https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git', description: 'Git URL')
     string(name: 'GIT_BRANCH', defaultValue: 'master', description: 'Git branch')
     string(name: 'GIT_TAG', defaultValue: '', description: 'Git tag')
     //
@@ -32,9 +34,9 @@ pwd
 ls -la
 printenv | sort
 
-[ ! -e linux-mainline ] && git clone ${GIT_URL} linux-mainline
+[ ! -e linux-sources ] && git clone ${GIT_URL} linux-sources
 # FIXME: Should handle case where git clone was done with a different GIT_URL
-cd linux-mainline && git fetch --all --prune
+cd linux-sources && git fetch --all --prune
 if [ "${GIT_BRANCH}" != "" ]; then
   git checkout ${GIT_BRANCH} && git pull
 fi
@@ -55,7 +57,7 @@ pwd
 ls -la
 printenv | sort
 
-cd linux-mainline
+cd linux-sources
 
 # DEBUG
 # ls -la
