@@ -699,3 +699,361 @@ gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$
 gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$ spatch --sp-file ~/github/gmacario/learning-coccinelle/ex6.cocci --very-quiet --iso-file empty.iso --dir sound/pci/au88x0
 gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$
 ```
+
+
+### Exercise 7
+
+<!-- 2017-09-14 11:00 CEST -->
+
+Run `spatch` with `--parse-cocci` for some semantic patch you have developed.
+
+Example
+
+```
+spatch --parse-cocci ~/github/gmacario/learning-coccinelle/ex6.cocci
+```
+
+Result
+
+```
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$ spatch --parse-cocci ~/github/gmacario/learning-coccinelle/ex6.cocci
+init_defs_builtins: /usr/local/lib/coccinelle/standard.h
+@rule starting on line 1@
+identifier e1;
+expression e2;
+statement S2;
+statement S1;
+@@
+
+
+(
+
+(
+
+(
+
+  <<< e1 = e2;
+if (-(
+        >>> e1
+      -e1 -= -e2-) == NULL)
+|
+
+  <<< e1 = e2;
+if (-e1
+      >>> e1
+     -= -e2 == NULL)
+)S1 else S2
+|
+
+(
+
+  <<< e1 = e2;
+if (-(
+        >>> e1
+      -e1 -= -e2-) == NULL)
+|
+
+  <<< e1 = e2;
+if (-e1
+      >>> e1
+     -= -e2 == NULL)
+)S1
+)
+|
+
+(
+
+(
+
+(
+
+  <<< e1 = e2;
+if (-(
+        >>> e1
+      -e1 -= -e2-) != NULL)
+|
+
+  <<< e1 = e2;
+if (-e1
+      >>> e1
+     -= -e2 != NULL)
+)S2 else S1
+|
+
+(
+
+  <<< e1 = e2;
+if (-(
+        >>> e1
+      -e1 -= -e2-) != NULL)
+|
+
+  <<< e1 = e2;
+if (-e1
+      >>> e1
+     -= -e2 != NULL)
+)S2
+)
+|
+
+(
+
+(
+
+  <<< e1 = e2;
+if (-(
+        >>> e1
+      -e1 -= -e2-) == NULL)
+|
+
+  <<< e1 = e2;
+if (-e1
+      >>> e1
+     -= -e2 == NULL)
+)S1 else S2
+|
+
+(
+
+  <<< e1 = e2;
+if (-(
+        >>> e1
+      -e1 -= -e2-) == NULL)
+|
+
+  <<< e1 = e2;
+if (-e1
+      >>> e1
+     -= -e2 == NULL)
+)S1
+)
+)
+)
+
+
+grep tokens
+NULL
+No query
+warning: iso commeq does not match the code below on line 4
+bool (unknown *(e1 = e2)
+  >>> e1
+ == unknown *NULL)
+the following code matched is not uniformly minus or context,
+or contains a disjunction:
+Exp:
+bool (unknown *(e1 = e2)
+  >>> e1
+ == unknown *NULL)
+
+warning: iso is_null does not match the code below on line 4
+bool (unknown *(e1 = e2)
+  >>> e1
+ == unknown *NULL)
+the following code matched is not uniformly minus or context,
+or contains a disjunction:
+Exp:
+bool (unknown *(e1 = e2)
+  >>> e1
+ == unknown *NULL)
+
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$
+```
+
+Explain the result (???)
+
+
+Slide 47: Dots
+
+Issue: Sometimes it is necessary to search for multiple related code fragments.
+
+Goals:
+
+1. Specify patterns consisting of fragments of code separated by arbitrary precision paths.
+2. Specify constraints on the contents of those execution paths.
+
+Using dots
+
+```
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$ spatch --sp-file ~/github/gmacario/learning-coccinelle/kmalloc_check_v1.cocci --dir --very-quiet arch/cris/arch-v10/kernel
+diff -u -p arch/cris/arch-v10/kernel/io_interface_mux.c /tmp/nothing/io_interface_mux.c
+--- arch/cris/arch-v10/kernel/io_interface_mux.c
++++ /tmp/nothing/io_interface_mux.c
+@@ -1106,11 +1106,9 @@ int cris_io_interface_register_watcher(v
+        if (NULL == notify) {
+                return -EINVAL;
+        }
+-       w = kmalloc(sizeof(*w), GFP_KERNEL);
+        if (!w) {
+                return -ENOMEM;
+        }
+-       w->notify = notify;
+        w->next = watchers;
+        watchers = w;
+
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$
+```
+
+Update semantic patch to avoid false positive (see tutorial.pdf, slide 54)
+
+```
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$ spatch --sp-file ~/github/gmacario/learning-coccinelle/kmalloc_check_v2.cocci --dir --very-quiet arch/cris/arch-v10/kernel
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$
+```
+
+Update semantic patch again (see tutorial.pdf, slide 55) and applying to all Linux source tree
+
+```
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$ spatch --sp-file ~/github/gmacario/learning-coccinelle/kmalloc_check_v3.cocci --dir --very-quiet .
+diff -u -p ./net/ipv4/syncookies.c /tmp/nothing/net/ipv4/syncookies.c
+--- ./net/ipv4/syncookies.c
++++ /tmp/nothing/net/ipv4/syncookies.c
+@@ -325,8 +325,6 @@ struct sock *cookie_v4_check(struct sock
+        if (opt && opt->optlen) {
+                int opt_size = sizeof(struct ip_options_rcu) + opt->optlen;
+
+-               ireq->opt = kmalloc(opt_size, GFP_ATOMIC);
+-               if (ireq->opt != NULL && ip_options_echo(&ireq->opt->opt, skb)) {
+                        kfree(ireq->opt);
+                        ireq->opt = NULL;
+                }
+diff -u -p ./drivers/macintosh/via-pmu.c /tmp/nothing/drivers/macintosh/via-pmu.c
+--- ./drivers/macintosh/via-pmu.c
++++ /tmp/nothing/drivers/macintosh/via-pmu.c
+@@ -2073,10 +2073,8 @@ pmu_open(struct inode *inode, struct fil
+        struct pmu_private *pp;
+        unsigned long flags;
+
+-       pp = kmalloc(sizeof(struct pmu_private), GFP_KERNEL);
+        if (pp == 0)
+                return -ENOMEM;
+-       pp->rb_get = pp->rb_put = 0;
+        spin_lock_init(&pp->lock);
+        init_waitqueue_head(&pp->wait);
+        mutex_lock(&pmu_info_proc_mutex);
+diff -u -p ./drivers/macintosh/adb.c /tmp/nothing/drivers/macintosh/adb.c
+--- ./drivers/macintosh/adb.c
++++ /tmp/nothing/drivers/macintosh/adb.c
+@@ -652,13 +652,11 @@ static int adb_open(struct inode *inode,
+                ret = -ENXIO;
+                goto out;
+        }
+-       state = kmalloc(sizeof(struct adbdev_state), GFP_KERNEL);
+        if (state == 0) {
+                ret = -ENOMEM;
+                goto out;
+        }
+        file->private_data = state;
+-       spin_lock_init(&state->lock);
+        atomic_set(&state->n_pending, 0);
+        state->completed = NULL;
+        init_waitqueue_head(&state->wait_queue);
+diff -u -p ./drivers/net/wireless/orinoco/main.c /tmp/nothing/drivers/net/wireless/orinoco/main.c
+--- ./drivers/net/wireless/orinoco/main.c
++++ /tmp/nothing/drivers/net/wireless/orinoco/main.c
+@@ -1337,8 +1337,6 @@ static void qbuf_scan(struct orinoco_pri
+        struct orinoco_scan_data *sd;
+        unsigned long flags;
+
+-       sd = kmalloc(sizeof(*sd), GFP_ATOMIC);
+-       sd->buf = buf;
+        sd->len = len;
+        sd->type = type;
+
+...
+```
+
+Slide 56: Real bug: `linux-3.2/arch/cris/arch-v32/mm/intmem.c`
+
+```
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$ spatch --sp-file ~/github/gmacario/learning-coccinelle/kmalloc_check_v3.cocci --dir --very-quiet arch/cris/arch-v32/mm
+diff -u -p arch/cris/arch-v32/mm/intmem.c /tmp/nothing/intmem.c
+--- arch/cris/arch-v32/mm/intmem.c
++++ /tmp/nothing/intmem.c
+@@ -34,12 +34,10 @@ static void crisv32_intmem_init(void)
+        static int initiated = 0;
+        if (!initiated) {
+                struct intmem_allocation* alloc;
+-               alloc = kmalloc(sizeof *alloc, GFP_KERNEL);
+                INIT_LIST_HEAD(&intmem_allocations);
+                intmem_virtual = ioremap(MEM_INTMEM_START + RESERVED_SIZE,
+                                         MEM_INTMEM_SIZE - RESERVED_SIZE);
+                initiated = 1;
+-               alloc->size = MEM_INTMEM_SIZE - RESERVED_SIZE;
+                alloc->offset = 0;
+                alloc->status = STATUS_FREE;
+                list_add_tail(&alloc->entry, &intmem_allocations);
+@@ -63,8 +61,6 @@ void* crisv32_intmem_alloc(unsigned size
+                    allocation->size >= size + alignment) {
+                        if (allocation->size > size + alignment) {
+                                struct intmem_allocation* alloc;
+-                               alloc = kmalloc(sizeof *alloc, GFP_ATOMIC);
+-                               alloc->status = STATUS_FREE;
+                                alloc->size = allocation->size - size -
+                                        alignment;
+                                alloc->offset = allocation->offset + size +
+@@ -73,8 +69,6 @@ void* crisv32_intmem_alloc(unsigned size
+
+                                if (alignment) {
+                                        struct intmem_allocation *tmp;
+-                                       tmp = kmalloc(sizeof *tmp, GFP_ATOMIC);
+-                                       tmp->offset = allocation->offset;
+                                        tmp->size = alignment;
+                                        tmp->status = STATUS_FREE;
+                                        allocation->offset += alignment;
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$
+```
+
+But also a false positive (again, slide 57)
+
+```
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$ spatch --sp-file ~/github/gmacario/learning-coccinelle/kmalloc_check_v3.cocci --dir --very-quiet net/ipv4/syncookies.c
+--- net/ipv4/syncookies.c
++++ /tmp/cocci-output-9851-ea69cc-syncookies.c
+@@ -325,8 +325,6 @@ struct sock *cookie_v4_check(struct sock
+        if (opt && opt->optlen) {
+                int opt_size = sizeof(struct ip_options_rcu) + opt->optlen;
+
+-               ireq->opt = kmalloc(opt_size, GFP_ATOMIC);
+-               if (ireq->opt != NULL && ip_options_echo(&ireq->opt->opt, skb)) {
+                        kfree(ireq->opt);
+                        ireq->opt = NULL;
+                }
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$
+```
+
+<!-- 2017-09-14 14:33 CEST -->
+
+Revised version (tutorial.pdf slide 59)
+
+```bash
+spatch --sp-file ~/github/gmacario/learning-coccinelle/kmalloc_check_v4.cocci --dir --very-quiet .
+```
+
+Result: TODO
+
+```
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$ spatch --sp-file ~/github/gmacario/learning-coccinelle/kmalloc_check_v4.cocci --dir --very-quiet .
+diff -u -p ./net/ipv4/syncookies.c /tmp/nothing/net/ipv4/syncookies.c
+--- ./net/ipv4/syncookies.c
++++ /tmp/nothing/net/ipv4/syncookies.c
+@@ -326,7 +326,6 @@ struct sock *cookie_v4_check(struct sock
+                int opt_size = sizeof(struct ip_options_rcu) + opt->optlen;
+
+                ireq->opt = kmalloc(opt_size, GFP_ATOMIC);
+-               if (ireq->opt != NULL && ip_options_echo(&ireq->opt->opt, skb)) {
+                        kfree(ireq->opt);
+                        ireq->opt = NULL;
+                }
+diff -u -p ./drivers/macintosh/via-pmu.c /tmp/nothing/drivers/macintosh/via-pmu.c
+--- ./drivers/macintosh/via-pmu.c
++++ /tmp/nothing/drivers/macintosh/via-pmu.c
+@@ -2076,7 +2076,6 @@ pmu_open(struct inode *inode, struct fil
+        pp = kmalloc(sizeof(struct pmu_private), GFP_KERNEL);
+        if (pp == 0)
+                return -ENOMEM;
+-       pp->rb_get = pp->rb_put = 0;
+        spin_lock_init(&pp->lock);
+        init_waitqueue_head(&pp->wait);
+        mutex_lock(&pmu_info_proc_mutex);
+...
+```
