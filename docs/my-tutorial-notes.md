@@ -692,3 +692,10 @@ diff -u -p a/au88x0_a3d.c b/au88x0_a3d.c
                 kcontrol->info = snd_vortex_a3d_filter_info;
 gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$
 ```
+
+**NOTE**: No matches will happen If I disable isomorphism with the `--iso-file empty.iso` command line option:
+
+```
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$ spatch --sp-file ~/github/gmacario/learning-coccinelle/ex6.cocci --very-quiet --iso-file empty.iso --dir sound/pci/au88x0
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$
+```
