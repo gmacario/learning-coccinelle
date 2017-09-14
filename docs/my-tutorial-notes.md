@@ -408,7 +408,287 @@ diff -u -p a/cadence/macb.c b/cadence/macb.c
         dev_dbg(&bp->pdev->dev, "Mapped skb data %p to DMA addr %08lx\n",
 diff -u -p a/marvell/mv643xx_eth.c b/marvell/mv643xx_eth.c
 ...
-TODO
 ```
 
 **NOTE**: Did not understand questions/comments at point 3. and 4. of slide 34 of tutorial.pdf
+<!-- 2017-09-13 17:10 CEST -->
+
+Slide 37: Coccinelle features
+
+- Isomorphisms
+- Dots
+- Positions
+- Python
+
+Trying Semantic Patch from Slide 43
+
+<!-- 2017-08-13 17:18 CEST -->
+
+Contents of file div_round_up.cocci
+
+```
+@@
+expression n,d;
+@@
+
+- ((n) + (d) / (d))
++ DIV_ROUND_UP(n,d)
+```
+
+Test the semantic patch
+
+```bash
+cd ~/linux-stable && git checkout linux-3.2.y
+spatch --sp-file ~/github/gmacario/learning-coccinelle/div_round_up.cocci --very-quiet --dir . | tee div_round_up.patch
+grep '+++' div_round_up.patch | wc -l
+```
+
+Result: 185 occurrences
+
+```
+...
+@@ -2714,9 +2713,7 @@ loop_again:
+                         * of the zone, whichever is smaller.
+                         */
+                        balance_gap = min(low_wmark_pages(zone),
+-                               (zone->present_pages +
+-                                       KSWAPD_ZONE_BALANCE_GAP_RATIO-1) /
+-                               KSWAPD_ZONE_BALANCE_GAP_RATIO);
++                               DIV_ROUND_UP(zone->present_pages, KSWAPD_ZONE_BALANCE_GAP_RATIO));
+                        if (!zone_watermark_ok_safe(zone, order,
+                                        high_wmark_pages(zone) + balance_gap,
+                                        end_zone, 0)) {
+trying for __initdata_memblock
+diff -u -p a/mm/slob.c b/mm/slob.c
+--- a/mm/slob.c
++++ b/mm/slob.c
+@@ -174,7 +174,7 @@ static inline void clear_slob_page_free(
+ }
+
+ #define SLOB_UNIT sizeof(slob_t)
+-#define SLOB_UNITS(size) (((size) + SLOB_UNIT - 1)/SLOB_UNIT)
++#define SLOB_UNITS(size) DIV_ROUND_UP(size, SLOB_UNIT)
+ #define SLOB_ALIGN L1_CACHE_BYTES
+
+ /*
+gmacario@ies-genbld01-ub16:~/linux-stable (linux-3.2.y)$ grep '+++' div_round_up.patch | wc -l
+185
+gmacario@ies-genbld01-ub16:~/linux-stable (linux-3.2.y)$
+```
+
+**TODO**: Why not as in slide 43: "Changes 281 occurrences in Linux 3.2"?
+
+(Notice that I checked Linux 3.2.92, commit 52bc1fde85f0baf84ef30ebe32560c16c924696e)
+
+Trying against exact git tag "v3.2"
+
+```bash
+cd ~/linux-stable && git checkout v3.2
+spatch --sp-file ~/github/gmacario/learning-coccinelle/div_round_up.cocci --very-quiet --dir . | tee div_round_up.patch
+grep '+++' div_round_up.patch | wc -l
+```
+
+Result: 186 occurrences (again, not 281 as displayed on slide 43)
+
+```
+...
+diff -u -p a/arch/powerpc/platforms/powermac/nvram.c b/arch/powerpc/platforms/powermac/nvram.c
+--- a/arch/powerpc/platforms/powermac/nvram.c
++++ b/arch/powerpc/platforms/powermac/nvram.c
+@@ -601,7 +601,7 @@ int __init pmac_nvram_init(void)
+                ppc_md.nvram_write_val  = direct_nvram_write_byte;
+        } else if (nvram_naddrs == 1) {
+                nvram_data = ioremap(r1.start, s1);
+-               nvram_mult = (s1 + NVRAM_SIZE - 1) / NVRAM_SIZE;
++               nvram_mult = DIV_ROUND_UP(s1, NVRAM_SIZE);
+                ppc_md.nvram_read_val   = direct_nvram_read_byte;
+                ppc_md.nvram_write_val  = direct_nvram_write_byte;
+        } else if (nvram_naddrs == 2) {
+trying for __init_task_data
+trying for iowa_pci_io
+trying for iowa_pci_io
+trying for iowa_pci_io
+trying for __init_task_data
+diff -u -p a/arch/powerpc/mm/dma-noncoherent.c b/arch/powerpc/mm/dma-noncoherent.c
+--- a/arch/powerpc/mm/dma-noncoherent.c
++++ b/arch/powerpc/mm/dma-noncoherent.c
+@@ -359,7 +359,7 @@ static inline void __dma_sync_page_highm
+        size_t seg_size = min((size_t)(PAGE_SIZE - offset), size);
+        size_t cur_size = seg_size;
+        unsigned long flags, start, seg_offset = offset;
+-       int nr_segs = 1 + ((size - seg_size) + PAGE_SIZE - 1)/PAGE_SIZE;
++       int nr_segs = 1 + DIV_ROUND_UP(size - seg_size, PAGE_SIZE);
+        int seg_nr = 0;
+
+        local_irq_save(flags);
+diff -u -p a/tools/perf/util/help.c b/tools/perf/util/help.c
+--- a/tools/perf/util/help.c
++++ b/tools/perf/util/help.c
+@@ -83,7 +83,7 @@ static void pretty_print_string_list(str
+
+        if (space < max_cols)
+                cols = max_cols / space;
+-       rows = (cmds->cnt + cols - 1) / cols;
++       rows = DIV_ROUND_UP(cmds->cnt, cols);
+
+        for (i = 0; i < rows; i++) {
+                printf("  ");
+diff -u -p a/mm/slab.c b/mm/slab.c
+--- a/mm/slab.c
++++ b/mm/slab.c
+@@ -4177,8 +4177,8 @@ static void cache_reap(struct work_struc
+                else {
+                        int freed;
+
+-                       freed = drain_freelist(searchp, l3, (l3->free_limit +
+-                               5 * searchp->num - 1) / (5 * searchp->num));
++                       freed = drain_freelist(searchp, l3,
++                                              DIV_ROUND_UP(l3->free_limit, 5 * searchp->num));
+                        STATS_ADD_REAPED(searchp, freed);
+                }
+ next:
+diff -u -p a/mm/vmscan.c b/mm/vmscan.c
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -2638,9 +2638,7 @@ loop_again:
+                         * of the zone, whichever is smaller.
+                         */
+                        balance_gap = min(low_wmark_pages(zone),
+-                               (zone->present_pages +
+-                                       KSWAPD_ZONE_BALANCE_GAP_RATIO-1) /
+-                               KSWAPD_ZONE_BALANCE_GAP_RATIO);
++                               DIV_ROUND_UP(zone->present_pages, KSWAPD_ZONE_BALANCE_GAP_RATIO));
+                        if (!zone_watermark_ok_safe(zone, order,
+                                        high_wmark_pages(zone) + balance_gap,
+                                        end_zone, 0)) {
+trying for __initdata_memblock
+diff -u -p a/mm/slob.c b/mm/slob.c
+--- a/mm/slob.c
++++ b/mm/slob.c
+@@ -174,7 +174,7 @@ static inline void clear_slob_page_free(
+ }
+
+ #define SLOB_UNIT sizeof(slob_t)
+-#define SLOB_UNITS(size) (((size) + SLOB_UNIT - 1)/SLOB_UNIT)
++#define SLOB_UNITS(size) DIV_ROUND_UP(size, SLOB_UNIT)
+ #define SLOB_ALIGN L1_CACHE_BYTES
+
+ /*
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$ grep '+++' div_round_up.patch | wc -l
+186
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$
+```
+
+**TODO**: What do lines i.e. `trying for iowa_pci_io` mean???
+
+
+### Exercise 6
+
+<!-- 2017-09-14 09:50 CEST -->
+
+Contents of file `ex6.cocci`
+
+```
+@@ identifier e1; expression e2; statement S1, S2; @@
++ e1 = e2;
+  if (
+-     (e1 = e2)
++     e1
+      == NULL) S1 else S2
+```
+
+Test the semantic patch
+
+```bash
+cd ~/linux-stable && git checkout v3.2
+spatch --sp-file ~/github/gmacario/learning-coccinelle/ex6.cocci --very-quiet --dir sound/pci/au88x0
+```
+
+Result:
+
+```
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$ spatch --sp-file ~/github/gmacario/learning-coccinelle/ex6.cocci --very-quiet --dir sound/pci/au88x0
+diff -u -p a/au88x0_eq.c b/au88x0_eq.c
+--- a/au88x0_eq.c
++++ b/au88x0_eq.c
+@@ -884,8 +884,8 @@ static int __devinit vortex_eq_init(vort
+
+        vortex_Eqlzr_init(vortex);
+
+-       if ((kcontrol =
+-            snd_ctl_new1(&vortex_eqtoggle_kcontrol, vortex)) == NULL)
++       kcontrol = snd_ctl_new1(&vortex_eqtoggle_kcontrol, vortex);
++       if (kcontrol == NULL)
+                return -ENOMEM;
+        kcontrol->private_value = 0;
+        if ((err = snd_ctl_add(vortex->card, kcontrol)) < 0)
+@@ -893,8 +893,8 @@ static int __devinit vortex_eq_init(vort
+
+        /* EQ gain controls */
+        for (i = 0; i < 10; i++) {
+-               if ((kcontrol =
+-                    snd_ctl_new1(&vortex_eq_kcontrol, vortex)) == NULL)
++               kcontrol = snd_ctl_new1(&vortex_eq_kcontrol, vortex);
++               if (kcontrol == NULL)
+                        return -ENOMEM;
+                snprintf(kcontrol->id.name, sizeof(kcontrol->id.name),
+                        "%s Playback Volume", EqBandLabels[i]);
+@@ -904,7 +904,8 @@ static int __devinit vortex_eq_init(vort
+                //vortex->eqctrl[i] = kcontrol;
+        }
+        /* EQ band levels */
+-       if ((kcontrol = snd_ctl_new1(&vortex_levels_kcontrol, vortex)) == NULL)
++       kcontrol = snd_ctl_new1(&vortex_levels_kcontrol, vortex);
++       if (kcontrol == NULL)
+                return -ENOMEM;
+        if ((err = snd_ctl_add(vortex->card, kcontrol)) < 0)
+                return err;
+diff -u -p a/au88x0_a3d.c b/au88x0_a3d.c
+--- a/au88x0_a3d.c
++++ b/au88x0_a3d.c
+@@ -861,8 +861,8 @@ static int __devinit vortex_a3d_register
+        int err, i;
+        /* HRTF controls. */
+        for (i = 0; i < NR_A3D; i++) {
+-               if ((kcontrol =
+-                    snd_ctl_new1(&vortex_a3d_kcontrol, &vortex->a3d[i])) == NULL)
++               kcontrol = snd_ctl_new1(&vortex_a3d_kcontrol, &vortex->a3d[i]);
++               if (kcontrol == NULL)
+                        return -ENOMEM;
+                kcontrol->id.numid = CTRLID_HRTF;
+                kcontrol->info = snd_vortex_a3d_hrtf_info;
+@@ -872,8 +872,8 @@ static int __devinit vortex_a3d_register
+        }
+        /* ITD controls. */
+        for (i = 0; i < NR_A3D; i++) {
+-               if ((kcontrol =
+-                    snd_ctl_new1(&vortex_a3d_kcontrol, &vortex->a3d[i])) == NULL)
++               kcontrol = snd_ctl_new1(&vortex_a3d_kcontrol, &vortex->a3d[i]);
++               if (kcontrol == NULL)
+                        return -ENOMEM;
+                kcontrol->id.numid = CTRLID_ITD;
+                kcontrol->info = snd_vortex_a3d_itd_info;
+@@ -883,8 +883,8 @@ static int __devinit vortex_a3d_register
+        }
+        /* ILD (gains) controls. */
+        for (i = 0; i < NR_A3D; i++) {
+-               if ((kcontrol =
+-                    snd_ctl_new1(&vortex_a3d_kcontrol, &vortex->a3d[i])) == NULL)
++               kcontrol = snd_ctl_new1(&vortex_a3d_kcontrol, &vortex->a3d[i]);
++               if (kcontrol == NULL)
+                        return -ENOMEM;
+                kcontrol->id.numid = CTRLID_GAINS;
+                kcontrol->info = snd_vortex_a3d_ild_info;
+@@ -894,8 +894,8 @@ static int __devinit vortex_a3d_register
+        }
+        /* Filter controls. */
+        for (i = 0; i < NR_A3D; i++) {
+-               if ((kcontrol =
+-                    snd_ctl_new1(&vortex_a3d_kcontrol, &vortex->a3d[i])) == NULL)
++               kcontrol = snd_ctl_new1(&vortex_a3d_kcontrol, &vortex->a3d[i]);
++               if (kcontrol == NULL)
+                        return -ENOMEM;
+                kcontrol->id.numid = CTRLID_FILTER;
+                kcontrol->info = snd_vortex_a3d_filter_info;
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$
+```
