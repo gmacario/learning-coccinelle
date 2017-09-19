@@ -1057,3 +1057,38 @@ diff -u -p ./drivers/macintosh/via-pmu.c /tmp/nothing/drivers/macintosh/via-pmu.
         mutex_lock(&pmu_info_proc_mutex);
 ...
 ```
+
+
+### Exercise 8
+
+<!-- 2017-09-19 14:05 CEST -->
+
+See tutorial.pdf, Slide 60
+
+Trying semantic patch
+
+```
+@@
+expression e,e1;
+identifier id;
+@@
+
+- e = kmalloc(e1, id)
++ e = kzalloc(e1, id)
+... when != e != NULL
+
+- memset(e, 0, sizeof(*e));
+```
+
+```bash
+spatch --sp-file ~/github/gmacario/learning-coccinelle/ex8.cocci --dir --very-quiet drivers/net/wireless
+```
+
+Result: ERROR
+
+```
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$ spatch --sp-file ~/github/gmacario/learning-coccinelle/ex8.cocci --dir --very-quiet drivers/net/wireless
+EXN: Failure("rule starting on line 3: node 34: memset(...)[1,2,13] in __hostap_add_bss reachable by inconsistent control-flow paths")gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$
+```
+
+**TODO**: Understand spatch runtime error
