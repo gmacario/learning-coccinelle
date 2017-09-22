@@ -1092,3 +1092,42 @@ EXN: Failure("rule starting on line 3: node 34: memset(...)[1,2,13] in __hostap_
 ```
 
 **TODO**: Understand spatch runtime error
+
+
+### Exercise 9
+
+**TODO**: Exercise 9 (Slide 61)
+
+### Exercise 10
+
+**TODO**: Exercise 10 (Slides 62-64)
+
+Slide 65: Positions and Python
+
+<!-- 2017-09-14 15:17 CEST -->
+
+```
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$ spatch --sp-file ~/github/gmacario/learning-coccinelle/position_v1.cocci --dir --very-quiet drivers/net/wireless
+kmalloc on line 1357 not tested before reference on line 1358
+kmalloc on line 1340 not tested before reference on line 1341
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$
+```
+
+Slide 67: A refinement
+
+```
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$ spatch --sp-file ~/github/gmacario/learning-coccinelle/position_v2.cocci --dir --very-quiet drivers/net/wireless
+kmalloc on line 1357 not tested before reference on line 1358
+kmalloc on line 1340 not tested before reference on line 1341
+gmacario@ies-genbld01-ub16:~/linux-stable (detached*)$
+```
+
+**TODO**: Do not see any difference vs _v1
+
+### Exercise 11
+
+**TODO**: Exercise 11 (Slide 68)
+
+### Exercise 12
+
+**TODO**: Exercise 12 (Slide 69-71)
