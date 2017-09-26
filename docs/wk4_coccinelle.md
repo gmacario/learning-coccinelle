@@ -289,4 +289,40 @@ gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)$
 
 BUG: This patch has too enthusiastic and removes also unrelated variables!
 
+### 2.2  Eliminating unnecessary parentheses
+
+#### 2.2.1 Write a semantic patch to remove parentheses around the right hand side of an assignment
+
+```
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch --very-quiet --sp-file wk4/ex_2_2_1.cocci --dir ~/linux-mainline/block/
+diff -u -p a/mq-deadline.c b/mq-deadline.c
+--- a/mq-deadline.c
++++ b/mq-deadline.c
+@@ -488,9 +488,9 @@ static ssize_t __FUNC(struct elevator_qu
+        int __data;                                                     \
+        deadline_var_store(&__data, (page));                            \
+        if (__data < (MIN))                                             \
+-               __data = (MIN);                                         \
++               __data = MIN;                                           \
+        else if (__data > (MAX))                                        \
+-               __data = (MAX);                                         \
++               __data = MAX;                                           \
+        if (__CONV)                                                     \
+                *(__PTR) = msecs_to_jiffies(__data);                    \
+        else                                                            \
+...
+```
+
+Result: 18-, 18+ (as reported by diffstat)
+
+```
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch --very-quiet --sp-file wk4/ex_2_2_1.cocci --dir ~/linux-mainline/block/ | grep '^-' | grep -v '^---' | wc -l
+18
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch --very-quiet --sp-file wk4/ex_2_2_1.cocci --dir ~/linux-mainline/block/ | grep '^+' | grep -v '^+++' | wc -l
+18
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
+```
+
+Julia: look at `coccinelle/demos/pythontococci.cocci` for an example how to use Python
+
 <!-- EOF -->
