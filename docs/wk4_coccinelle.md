@@ -333,7 +333,7 @@ gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch 
 gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
 ```
 
-### 2.2.3 Write a semantic patch to remove parentheses in other places where they do not seem to be needed
+#### 2.2.3 Write a semantic patch to remove parentheses in other places where they do not seem to be needed
 
 Some examples
 
@@ -353,8 +353,104 @@ gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch 
 gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
 ```
 
-TODO
-
 On `linux-mainline/block`: 13+ 13-
+
+### 2.3 Eliminating unnecessary prints
+
+<!-- 2017-09-26 16:23 CEST -->
+
+When the Linux kernel memory allocation function kmalloc does not find enough memory available, then it prints a backtrace before returning NULL. Thus there is no need for the calling context to print generic out of memory messages.
+
+#### 2.3.1
+
+Write a semantic patch to remove a call to a print function that has a single string argument on failure of calls to functions such as kmalloc, kzalloc, kcalloc, devm_kmalloc, devm_kzalloc, devm_kcalloc, etc. Ensure that no unnecessary braces are left in the transformed code.
+
+Expected `block: 4+ 12-`
+
+```
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch --very-quiet --sp-file wk4/ex_2_3_1.cocci --dir ~/linux-mainline/block
+diff -u -p a/partitions/ldm.c b/partitions/ldm.c
+--- a/partitions/ldm.c
++++ b/partitions/ldm.c
+@@ -379,10 +379,9 @@ static bool ldm_validate_tocblocks(struc
+        ph = &ldb->ph;
+        tb[0] = &ldb->toc;
+        tb[1] = kmalloc(sizeof(*tb[1]) * 3, GFP_KERNEL);
+-       if (!tb[1]) {
++       if (!tb[1])
+                ldm_crit("Out of memory.");
+-               goto err;
+-       }
++       goto err;
+        tb[2] = (struct tocblock*)((u8*)tb[1] + sizeof(*tb[1]));
+        tb[3] = (struct tocblock*)((u8*)tb[2] + sizeof(*tb[2]));
+        /*
+@@ -1187,10 +1186,9 @@ static bool ldm_ldmdb_add (u8 *data, int
+        BUG_ON (!data || !ldb);
+
+        vb = kmalloc (sizeof (*vb), GFP_KERNEL);
+-       if (!vb) {
++       if (!vb)
+                ldm_crit ("Out of memory.");
+-               return false;
+-       }
++       return false;
+
+        if (!ldm_parse_vblk (data, len, vb)) {
+                kfree(vb);
+@@ -1273,10 +1271,9 @@ static bool ldm_frag_add (const u8 *data
+        }
+
+        f = kmalloc (sizeof (*f) + size*num, GFP_KERNEL);
+-       if (!f) {
++       if (!f)
+                ldm_crit ("Out of memory.");
+-               return false;
+-       }
++       return false;
+
+        f->group = group;
+        f->num   = num;
+@@ -1467,10 +1464,9 @@ int ldm_partition(struct parsed_partitio
+                return 0;
+
+        ldb = kmalloc (sizeof (*ldb), GFP_KERNEL);
+-       if (!ldb) {
++       if (!ldb)
+                ldm_crit ("Out of memory.");
+-               goto out;
+-       }
++       goto out;
+
+        /* Parse and check privheads. */
+        if (!ldm_validate_privheads(state, &ldb->ph))
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
+```
+
+**NOTE**: The remaining `goto` statement is not properly aligned.
+Julia: This is a bug in Coccinelle that has to be fixed.
+
+Gianpaolo: Apart from that, questioning the added value of this semantic patch, especially about removing the unnecessary `{...}`.
+
+Julia: This is part of the Linux kernel coding style, maintaners will get annoyed otherwise and will not accept the change upstream.
+
+Discussing some conflicts between Linux kernel coding style vs. MISRA
+(as this example well points out)
+
+Search for "LWN 0 day " fenggung
+
+<https://lwn.net/Articles/514278/>
+
+See also: <https://01.org/lkp/documentation/0-day-test-service>
+
+GitHub: <https://github.com/intel/lkp-tests>
+
+Mailing List: <https://lists.01.org/mailman/listinfo/kbuild-all>
+
+#### 2.3.2
+
+Write a semantic patch to remove a call to a print function that has multiple arguments on failure of calls to functions such as kmalloc, kzalloc, kcalloc, devm_kmalloc, devm_kzalloc, devm_kcalloc, etc. Is is it always desirable to remove these calls?
+
+`block: 5+ 15-`
 
 <!-- EOF -->
