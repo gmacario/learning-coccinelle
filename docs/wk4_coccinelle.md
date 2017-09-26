@@ -333,5 +333,28 @@ gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch 
 gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
 ```
 
+### 2.2.3 Write a semantic patch to remove parentheses in other places where they do not seem to be needed
+
+Some examples
+
+```
+return (expression);
+
+... & (e->fld)
+```
+
+Result
+
+```
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch --very-quiet --sp-file wk4/ex_2_2_3.cocci --dir ~/linux-mainline/block/ | grep '^-' | grep -v '^---' | wc -l
+13
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch --very-quiet --sp-file wk4/ex_2_2_3.cocci --dir ~/linux-mainline/block/ | grep '^+' | grep -v '^+++' | wc -l
+13
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
+```
+
+TODO
+
+On `linux-mainline/block`: 13+ 13-
 
 <!-- EOF -->
