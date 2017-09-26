@@ -325,4 +325,13 @@ gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
 
 Julia: look at `coccinelle/demos/pythontococci.cocci` for an example how to use Python
 
+#### 2.2.2 Write a semantic patch to remove parentheses around the right hand side of an assignment, but keep the parentheses when the right hand side has the form E1 == E2, as the two kinds of = can be confused.
+
+```
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch --very-quiet --sp-file wk4/ex_2_2_2.cocci --dir ~/linux-mainline/block/ | grep '^-' | grep -v '^---' | wc -l
+16
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
+```
+
+
 <!-- EOF -->
