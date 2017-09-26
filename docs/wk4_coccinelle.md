@@ -27,9 +27,11 @@ tar xvzf wk4_exercises.tar.gz
 
 (the tarball is the snapshot of <https://pages.lip6.fr/Julia.Lawall/wk4/index.html>)
 
-## Introductory Exercises
+## 2 Introductory Exercises
 
-### Eliminating unnecessary temporary variables
+### 2.1 Eliminating unnecessary temporary variables
+
+#### 2.1.1 Write a semantic patch to make this transformation
 
 ```bash
 cd ~/github/gmacario/learning-coccinelle
@@ -154,9 +156,13 @@ diff -u -p a/khazad.c b/khazad.c
  }
 ```
 
+#### 2.1.2 Extend this semantic patch to ensure that `ret` is a local variable
 
+Trying against `linux-mainline/block` (before it was 3+ 8-, now it should be 28+ 57-)
 
+Julia: I am not sure that '28+ 57-' is a valid solution, will look at it further.
 
+For the moment let's skip and go to next exercise
 
 
 
