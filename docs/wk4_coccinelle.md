@@ -668,4 +668,124 @@ coccinelle.nm = cocci.make_ident(i2)
 
 Notice that you always need to prefix variables `coccinelle.xxx` to have them pass values back to other rules - see pythoncocci.cocci
 
+## 2.5
+
+Skipped
+
+## 2.6
+
+Skipped
+
+
+## 3.1 Simplify tests on boolean values
+
+### Exercise 3.1.1
+
+<!-- 2017-09-27 13:00 CEST -->
+
+> Write a semantic patch to find cases where a boolean expression
+> is tested using == or != and a constant (true, false, 1 or 0)
+> and simplify the code to account for the fact that booleans
+> are already true or false.
+
+Expected `drivers/char: 4+ 4-`
+
+Trying my own version
+
+```
+spatch --sp-file wk4/my_3_1_1.cocci --dir ~/linux-mainline/drivers/char
+```
+
+Result running the proposed solution for the Semantic Patch:
+
+```
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch --sp-file wk4/ex_3_1_1.cocci --dir ~/linux-mainline/drivers/char
+init_defs_builtins: /usr/local/lib/coccinelle/standard.h
+warning: line 7: should true be a metavariable?
+warning: line 10: should false be a metavariable?
+warning: line 14: should false be a metavariable?
+warning: line 18: should true be a metavariable?
+HANDLING: /home/gmacario/linux-mainline/drivers/char/ipmi/ipmi_bt_sm.c
+...
+HANDLING: /home/gmacario/linux-mainline/drivers/char/mwave/mwavedd.c
+diff =
+diff -u -p a/mwave/mwavedd.c b/mwave/mwavedd.c
+--- a/mwave/mwavedd.c
++++ b/mwave/mwavedd.c
+@@ -324,7 +324,7 @@ static long mwave_ioctl(struct file *fil
+                                pDrvData->IPCs[ipcnum].usIntCount);
+
+                        mutex_lock(&mwave_mutex);
+-                       if (pDrvData->IPCs[ipcnum].bIsEnabled == true) {
++                       if (pDrvData->IPCs[ipcnum].bIsEnabled) {
+                                DECLARE_WAITQUEUE(wait, current);
+
+                                PRINTK_2(TRACE_MWAVE,
+@@ -384,9 +384,9 @@ static long mwave_ioctl(struct file *fil
+                                return -EINVAL;
+                        }
+                        mutex_lock(&mwave_mutex);
+-                       if (pDrvData->IPCs[ipcnum].bIsEnabled == true) {
++                       if (pDrvData->IPCs[ipcnum].bIsEnabled) {
+                                pDrvData->IPCs[ipcnum].bIsEnabled = false;
+-                               if (pDrvData->IPCs[ipcnum].bIsHere == true) {
++                               if (pDrvData->IPCs[ipcnum].bIsHere) {
+                                        wake_up_interruptible(&pDrvData->IPCs[ipcnum].ipc_wait_queue);
+                                }
+                        }
+HANDLING: /home/gmacario/linux-mainline/drivers/char/mwave/3780i.c
+HANDLING: /home/gmacario/linux-mainline/drivers/char/mwave/tp3780i.c
+diff =
+diff -u -p a/mwave/tp3780i.c b/mwave/tp3780i.c
+--- a/mwave/tp3780i.c
++++ b/mwave/tp3780i.c
+@@ -127,7 +127,7 @@ static irqreturn_t DspInterrupt(int irq,
+                                PRINTK_2(TRACE_TP3780I,
+                                        "tp3780i::DspInterrupt usIntCount %x\n",
+                                        pDrvData->IPCs[usPCNum - 1].usIntCount);
+-                               if (pDrvData->IPCs[usPCNum - 1].bIsEnabled == true) {
++                               if (pDrvData->IPCs[usPCNum - 1].bIsEnabled) {
+                                        PRINTK_2(TRACE_TP3780I,
+                                                "tp3780i::DspInterrupt, waking up usPCNum %x\n",
+                                                usPCNum - 1);
+HANDLING: /home/gmacario/linux-mainline/drivers/char/ds1302.c
+...
+HANDLING: /home/gmacario/linux-mainline/drivers/char/random.c
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
+```
+
+
+
+
+
+
+# Additional exercises
+
+## apparmor: Fix ref count leak
+
+<!-- 2017-09-27 14:13 -->
+
+From <http://lists.osadl.org/pipermail/sil2linuxmp/2017-September/000482.html>
+
+> Hi all, hi coccinelle scripters,
+>
+> While scanning through the commits on the linux-stable repository as part of the root-cause analysis activities, I found this bug fix which might be suitable for detection with coccinelle:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.gi
+> t/commit/?id=6090bfb684a9985e29c3c0aae52a4b93f967e90f
+>
+> For the root-cause analysis, we are currently not considering to do a further root-cause analysis, as apparmor is not part of the current image and we do not intend to use apparmor.
+>
+> So, just in case you lack any further coccinelle exercises and would like to write a script to detect issues in apparmor, please go ahead.
+>
+> We, the root-cause analysis team, are continuing to analyse the bugs and see if we can find one that is suitable for detection with coccinelle. I hope Andreas can provide you the further pointers to the pre-existing root-cause analyses that are suitable for detection with coccinelle, if we don’t find suitable bug fixes.
+
+<https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/commit/?id=6090bfb684a9985e29c3c0aae52a4b93f967e90f>
+
+```
+TODO
+```
+
+Cfr. Julia reply: <http://lists.osadl.org/pipermail/sil2linuxmp/2017-September/000483.html>
+
 <!-- EOF -->
