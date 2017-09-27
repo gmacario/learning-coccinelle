@@ -754,10 +754,111 @@ HANDLING: /home/gmacario/linux-mainline/drivers/char/random.c
 gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
 ```
 
+### Exercise 3.1.2
+
+<!-- 2017-09-27 14:40 CEST -->
+
+> Some operators such as < and > already have boolean return type,
+> so there is not need to convert their results to booleans.
+> An example of such an unnecessary test is:
+> value > 3900 ? true : false
+> Write a semantic patch to drop these unnecessary tests.
+> Note that the transformation may require negating the test expression,
+> depending on the order of the true and false values.
+
+```
+spatch --sp-file wk4/my_3_1_2.cocci --dir ~/linux-mainline/drivers/gpu
+```
+
+Result:
+
+```
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch --sp-file wk4/my_3_1_2.cocci --dir ~/linux-mainline/drivers/gpu
+init_defs_builtins: /usr/local/lib/coccinelle/standard.h
+(ONCE) Expected tokens true false
+Skipping: /home/gmacario/linux-mainline/drivers/gpu/host1x/dev.c
+HANDLING: /home/gmacario/linux-mainline/drivers/gpu/host1x/mipi.c
+Skipping: /home/gmacario/linux-mainline/drivers/gpu/host1x/channel.c
+HANDLING: /home/gmacario/linux-mainline/drivers/gpu/host1x/cdma.c
+...
+HANDLING: /home/gmacario/linux-mainline/drivers/gpu/drm/nouveau/nouveau_ttm.c
+diff =
+diff -u -p a/drm/nouveau/nouveau_ttm.c b/drm/nouveau/nouveau_ttm.c
+--- a/drm/nouveau/nouveau_ttm.c
++++ b/drm/nouveau/nouveau_ttm.c
+@@ -391,7 +391,7 @@ nouveau_ttm_init(struct nouveau_drm *drm
+                                  &nouveau_bo_driver,
+                                  dev->anon_inode->i_mapping,
+                                  DRM_FILE_PAGE_OFFSET,
+-                                 bits <= 32 ? true : false);
++                                 bits <= 32);
+        if (ret) {
+                NV_ERROR(drm, "error initialising bo driver, %d\n", ret);
+                return ret;
+HANDLING: /home/gmacario/linux-mainline/drivers/gpu/drm/nouveau/nouveau_backlight.c
+...
+HANDLING: /home/gmacario/linux-mainline/drivers/gpu/drm/exynos/exynos_drm_fimc.c
+diff =
+diff -u -p a/drm/exynos/exynos_drm_fimc.c b/drm/exynos/exynos_drm_fimc.c
+--- a/drm/exynos/exynos_drm_fimc.c
++++ b/drm/exynos/exynos_drm_fimc.c
+@@ -960,8 +960,8 @@ static int fimc_set_prescaler(struct fim
+
+        sc->hratio = (src_w << 14) / (dst_w << hfactor);
+        sc->vratio = (src_h << 14) / (dst_h << vfactor);
+-       sc->up_h = (dst_w >= src_w) ? true : false;
+-       sc->up_v = (dst_h >= src_h) ? true : false;
++       sc->up_h = (dst_w >= src_w);
++       sc->up_v = (dst_h >= src_h);
+        DRM_DEBUG_KMS("hratio[%d]vratio[%d]up_h[%d]up_v[%d]\n",
+                sc->hratio, sc->vratio, sc->up_h, sc->up_v);
+
+Skipping: /home/gmacario/linux-mainline/drivers/gpu/drm/exynos/exynos_drm_iommu.c
+...
+HANDLING: /home/gmacario/linux-mainline/drivers/gpu/drm/sti/sti_hqvdp.c
+diff =
+diff -u -p a/drm/sti/sti_hqvdp.c b/drm/sti/sti_hqvdp.c
+--- a/drm/sti/sti_hqvdp.c
++++ b/drm/sti/sti_hqvdp.c
+@@ -736,7 +736,7 @@ static bool sti_hqvdp_check_hw_scaling(s
+
+        inv_zy = DIV_ROUND_UP(src_h, dst_h);
+
+-       return (inv_zy <= lfw) ? true : false;
++       return (inv_zy <= lfw);
+ }
+
+ /**
+HANDLING: /home/gmacario/linux-mainline/drivers/gpu/drm/sti/sti_tvout.c
+...
+HANDLING: /home/gmacario/linux-mainline/drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
+diff =
+diff -u -p a/drm/amd/amdgpu/amdgpu_pm.c b/drm/amd/amdgpu/amdgpu_pm.c
+--- a/drm/amd/amdgpu/amdgpu_pm.c
++++ b/drm/amd/amdgpu/amdgpu_pm.c
+@@ -1083,8 +1083,7 @@ static struct amdgpu_ps *amdgpu_dpm_pick
+        int i;
+        struct amdgpu_ps *ps;
+        u32 ui_class;
+-       bool single_display = (adev->pm.dpm.new_active_crtc_count < 2) ?
+-               true : false;
++       bool single_display = (adev->pm.dpm.new_active_crtc_count < 2);
+
+        /* check if the vblank period is too short to adjust the mclk */
+        if (single_display && adev->pm.funcs->vblank_too_short) {
+HANDLING: /home/gmacario/linux-mainline/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
+...
+Skipping: /home/gmacario/linux-mainline/drivers/gpu/drm/drm_vma_manager.c
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
+```
+TODO
 
 
+### Exercise 3.1.3
 
+TODO
 
+...
 
 # Additional exercises
 
