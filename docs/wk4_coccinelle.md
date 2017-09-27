@@ -900,9 +900,113 @@ gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
 
 TODO: Does not match expected `drivers/of: 0+ 29-`
 
-NOTE: The script only prints each function name only once.
+NOTE: The script only prints each function name only once **within the same file**.
 Julia explains this is an optimization done by Coccinelle which calls the
 Python script for each distinct set of metavariables
+
+The function names may be duplicated if they occur on different files, though.
+See for example with `linux-mainline/arch`
+
+```
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch --very-quiet --sp-file wk4/ex_4_1.cocci --dir ~/linux-mainline/arch
+of_find_compatible_node
+of_find_node_by_name
+of_find_node_by_name
+of_find_node_by_path
+of_node_get
+of_find_compatible_node
+of_find_node_by_path
+of_find_compatible_node
+of_find_compatible_node
+of_find_compatible_node
+of_find_node_by_path
+of_parse_phandle
+of_parse_phandle
+of_find_compatible_node
+trying for __ro_after_init
+of_get_next_child
+of_find_compatible_node
+of_find_matching_node
+of_find_compatible_node
+of_find_compatible_node
+of_find_compatible_node
+omap_get_timer_dt
+of_find_node_by_name
+of_get_child_by_name
+of_find_next_cache_node
+of_find_compatible_node
+of_find_node_by_name
+of_find_node_by_path
+of_get_parent
+of_get_next_child
+of_node_get
+of_find_node_by_name
+of_find_node_by_name
+of_find_node_by_path
+of_find_node_by_type
+of_find_node_by_path
+of_get_parent
+of_get_parent
+of_find_node_by_name
+of_find_node_by_name
+of_find_node_by_path
+of_find_node_by_type
+of_find_node_by_name
+of_find_node_by_path
+of_find_node_by_type
+of_find_node_by_path
+find_pe_dn
+of_find_node_by_name
+of_find_node_by_path
+of_find_node_by_path
+of_find_node_by_path
+of_find_node_by_path
+of_get_parent
+of_find_compatible_node
+of_find_node_by_path
+of_find_node_by_path
+of_find_compatible_node
+of_find_compatible_node
+of_find_compatible_node
+of_get_parent
+of_find_compatible_node
+of_find_compatible_node
+of_find_compatible_node
+of_find_node_by_path
+of_find_node_by_name
+of_find_node_by_type
+of_find_node_with_property
+of_find_node_by_phandle
+of_find_node_by_path
+of_find_compatible_node
+of_get_parent
+of_find_matching_node
+of_find_matching_node
+of_find_matching_node
+of_find_matching_node
+of_find_matching_node
+of_find_matching_node
+of_get_parent
+trying for __init_task_data
+of_find_compatible_node
+of_get_cpu_node
+of_find_compatible_node
+of_find_node_by_path
+of_find_node_by_path
+of_find_node_by_type
+of_get_cpu_node
+of_find_compatible_node
+of_get_cpu_node
+of_get_cpu_node
+of_find_node_by_phandle
+of_find_node_by_type
+of_find_node_by_path
+of_find_node_by_type
+of_get_cpu_node
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
+```
+
+Notice that Exercise 4.2 will provide a solution to this
 
 To find all the occurrences you need to add other metavariables (i.e. p1, p2)
 as in my solution
@@ -997,6 +1101,67 @@ gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
 ```
 
 I got 26 occurrences now (not yet 29, though...)
+
+### Exercise 4.2 Avoiding duplicates in the list of relevant functions
+
+<!-- 2017-09-27 16:30 CEST -->
+
+> Device node getting functions are likely to be used more than once.
+> The result of the previous semantic patch will be more digestible
+> if each function name appears only once in the output.
+> Add an initialize rule to your semantic patch to make a global state in
+> which to remember previously seen names, so they are not printed more than once.
+
+Result against `linux-mainline/arch` using the proposed solution #1
+
+```
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch --very-quiet --sp-file wk4/ex_4_2.cocci --dir ~/linux-mainline/arch
+trying for __ro_after_init
+trying for __init_task_data
+of_find_compatible_node
+of_find_node_by_name
+of_find_node_by_path
+of_node_get
+of_parse_phandle
+of_get_next_child
+of_find_matching_node
+omap_get_timer_dt
+of_get_child_by_name
+of_find_next_cache_node
+of_get_parent
+of_find_node_by_type
+find_pe_dn
+of_find_node_with_property
+of_find_node_by_phandle
+of_get_cpu_node
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
+```
+
+Result against `linux-mainline/arch` using the proposed solution #2
+(notice that the order is different from solution #1, but no other differences since solution #1 did not produce duplicates either)
+
+```
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch --very-quiet --sp-file wk4/ex_4_2b.cocci --dir ~/linux-mainline/arch
+trying for __ro_after_init
+trying for __init_task_data
+of_get_cpu_node
+of_find_node_by_phandle
+of_find_node_with_property
+find_pe_dn
+of_find_node_by_type
+of_get_parent
+of_find_next_cache_node
+of_get_child_by_name
+omap_get_timer_dt
+of_find_matching_node
+of_get_next_child
+of_parse_phandle
+of_node_get
+of_find_node_by_path
+of_find_node_by_name
+of_find_compatible_node
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
+```
 
 TODO
 
