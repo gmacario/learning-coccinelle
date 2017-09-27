@@ -656,4 +656,16 @@ Manual: <https://github.com/coccinelle/coccinelle/blob/master/docs/manual/cocci-
 Definition of the elements shared between Python and Coccinelle:
 <https://github.com/coccinelle/coccinelle/blob/master/python/coccilib/elems.py>
 
+Step 3: Implement the Python script to bind the search and replace rules
+
+Julia: In Python here is no built-in `make_ident` as in OCaml.
+You may try the following
+
+```
+coccinelle.nm = i2
+coccinelle.nm = cocci.make_ident(i2)
+```
+
+Notice that you always need to prefix variables `coccinelle.xxx` to have them pass values back to other rules - see pythoncocci.cocci
+
 <!-- EOF -->
