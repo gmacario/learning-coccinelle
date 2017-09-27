@@ -858,6 +858,148 @@ TODO
 
 TODO
 
+### Exercise 3.2
+
+TODO
+
+### Exercise 3.3
+
+TODO
+
+### Exercise 4.1
+
+<!-- 2017-09-27 15:50 CEST -->
+
+> The key point we are going to look into with respect to device nodes
+> is memory management. Device nodes are reference counted, so the main
+> relevant functions are
+> `x = of_node_get(y);` (increment the reference count of y and return a pointer to the result which is stored in x)
+> and
+> `of_node_put(x);` (decrement the reference counter of x and possibly free it).
+> `of_node_get()`, however, is not that common.
+> More commonly, some kind of search function is called that finds a node
+> with a particular property and return a pointer to it.
+>
+> The goal of this exercise is to collect the names of these functions.
+> To this end, write a semantic patch that prints the name of any function
+> such that the returned value is ultimately passed to of_node_put.
+
+Running proposed solution
+
+```
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch --very-quiet --sp-file wk4/ex_4_1.cocci --dir ~/linux-mainline/drivers/of
+of_get_child_by_name
+of_get_parent
+of_graph_get_remote_endpoint
+of_node_get
+of_find_compatible_node
+of_find_node_by_path
+of_find_node_opts_by_path
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
+```
+
+TODO: Does not match expected `drivers/of: 0+ 29-`
+
+NOTE: The script only prints each function name only once.
+Julia explains this is an optimization done by Coccinelle which calls the
+Python script for each distinct set of metavariables
+
+To find all the occurrences you need to add other metavariables (i.e. p1, p2)
+as in my solution
+
+```
+spatch --very-quiet --sp-file wk4/my_4_1.cocci --dir ~/linux-mainline/drivers/of
+```
+
+Result:
+
+```
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch --very-quiet --sp-file wk4/my_4_1.cocci --dir ~/linux-mainline/drivers/of
+DEBUG: f= of_get_child_by_name
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/property.c , line= 616
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/property.c , line= 621
+DEBUG: f= of_get_child_by_name
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/property.c , line= 571
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/property.c , line= 585
+DEBUG: f= of_get_parent
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/property.c , line= 972
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/property.c , line= 979
+DEBUG: f= of_get_parent
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/property.c , line= 538
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/property.c , line= 553
+DEBUG: f= of_graph_get_remote_endpoint
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/property.c , line= 742
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/property.c , line= 746
+DEBUG: f= of_node_get
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/irq.c , line= 138
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/irq.c , line= 142
+DEBUG: f= of_find_compatible_node
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/of_numa.c , line= 147
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/of_numa.c , line= 151
+DEBUG: f= of_find_node_by_path
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 1258
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 1278
+DEBUG: f= of_find_node_by_path
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 600
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 602
+DEBUG: f= of_find_node_by_path
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 51
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 55
+DEBUG: f= of_find_node_by_path
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 62
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 66
+DEBUG: f= of_find_node_by_path
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 69
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 73
+DEBUG: f= of_find_node_by_path
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 80
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 84
+DEBUG: f= of_find_node_by_path
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 87
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 89
+DEBUG: f= of_find_node_by_path
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 91
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 93
+DEBUG: f= of_find_node_by_path
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 95
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 97
+DEBUG: f= of_find_node_by_path
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 1936
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 1990
+DEBUG: f= of_find_node_opts_by_path
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 99
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 102
+DEBUG: f= of_find_node_opts_by_path
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 104
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 107
+DEBUG: f= of_find_node_opts_by_path
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 109
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 112
+DEBUG: f= of_find_node_opts_by_path
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 114
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 116
+DEBUG: f= of_find_node_opts_by_path
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 119
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 122
+DEBUG: f= of_find_node_opts_by_path
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 125
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 128
+DEBUG: f= of_find_node_opts_by_path
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 130
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 132
+DEBUG: f= of_find_node_opts_by_path
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 135
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 137
+DEBUG: f= of_find_node_opts_by_path
+DEBUG: p1: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 140
+DEBUG: p2: file /home/gmacario/linux-mainline/drivers/of/unittest.c , line= 142
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
+```
+
+I got 26 occurrences now (not yet 29, though...)
+
+TODO
+
 ...
 
 # Additional exercises
