@@ -451,6 +451,209 @@ Mailing List: <https://lists.01.org/mailman/listinfo/kbuild-all>
 
 Write a semantic patch to remove a call to a print function that has multiple arguments on failure of calls to functions such as kmalloc, kzalloc, kcalloc, devm_kmalloc, devm_kzalloc, devm_kcalloc, etc. Is is it always desirable to remove these calls?
 
-`block: 5+ 15-`
+```
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch --very-quiet --sp-file wk4/ex_2_3_2.cocci --dir ~/linux-mainline/block
+diff -u -p a/genhd.c b/genhd.c
+--- a/genhd.c
++++ b/genhd.c
+@@ -1898,10 +1898,9 @@ static void disk_alloc_events(struct gen
+                return;
+
+        ev = kzalloc(sizeof(*ev), GFP_KERNEL);
+-       if (!ev) {
++       if (!ev)
+                pr_warn("%s: failed to initialize events\n", disk->disk_name);
+-               return;
+-       }
++       return;
+
+        INIT_LIST_HEAD(&ev->node);
+        ev->disk = disk;
+diff -u -p a/partitions/ldm.c b/partitions/ldm.c
+--- a/partitions/ldm.c
++++ b/partitions/ldm.c
+@@ -379,10 +379,9 @@ static bool ldm_validate_tocblocks(struc
+        ph = &ldb->ph;
+        tb[0] = &ldb->toc;
+        tb[1] = kmalloc(sizeof(*tb[1]) * 3, GFP_KERNEL);
+-       if (!tb[1]) {
++       if (!tb[1])
+                ldm_crit("Out of memory.");
+-               goto err;
+-       }
++       goto err;
+        tb[2] = (struct tocblock*)((u8*)tb[1] + sizeof(*tb[1]));
+        tb[3] = (struct tocblock*)((u8*)tb[2] + sizeof(*tb[2]));
+        /*
+@@ -1187,10 +1186,9 @@ static bool ldm_ldmdb_add (u8 *data, int
+        BUG_ON (!data || !ldb);
+
+        vb = kmalloc (sizeof (*vb), GFP_KERNEL);
+-       if (!vb) {
++       if (!vb)
+                ldm_crit ("Out of memory.");
+-               return false;
+-       }
++       return false;
+
+        if (!ldm_parse_vblk (data, len, vb)) {
+                kfree(vb);
+@@ -1273,10 +1271,9 @@ static bool ldm_frag_add (const u8 *data
+        }
+
+        f = kmalloc (sizeof (*f) + size*num, GFP_KERNEL);
+-       if (!f) {
++       if (!f)
+                ldm_crit ("Out of memory.");
+-               return false;
+-       }
++       return false;
+
+        f->group = group;
+        f->num   = num;
+@@ -1467,10 +1464,9 @@ int ldm_partition(struct parsed_partitio
+                return 0;
+
+        ldb = kmalloc (sizeof (*ldb), GFP_KERNEL);
+-       if (!ldb) {
++       if (!ldb)
+                ldm_crit ("Out of memory.");
+-               goto out;
+-       }
++       goto out;
+
+        /* Parse and check privheads. */
+        if (!ldm_validate_privheads(state, &ldb->ph))
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
+```
+
+Expected: `block: 5+ 15-`
+
+```
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch --very-quiet --sp-file wk4/ex_2_3_2.cocci --dir ~/linux-mainline/block | grep '^-' | grep -v '^---' | wc -l
+15
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch --very-quiet --sp-file wk4/ex_2_3_2.cocci --dir ~/linux-mainline/block | grep '^+' | grep -v '^+++' | wc -l
+10
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
+```
+
+**TODO**: Go figure out why I did not get the expected results
+
+-----------------------------------------
+
+## 2.4 Eliminate typedefs
+
+<!-- 2017-09-27 09:00 CEST -->
+
+Reference: <https://pages.lip6.fr/Julia.Lawall/wk4/exercises005.html>
+
+> The Linux kernel does not normally use typedefs for structure types.
+> Write a semantic patch to eliminate typedefs.
+> In doing this, it may be necessary to change the structure name.
+> Normally, structure names are in lowercase and do not end with `_t`.
+> Note that some typedef’d structures have names of their own and some do not.
+> In the former case, it may also be necessary to clean up uses of these names.
+
+Expected `kernel: 3+ 3-`
+
+Reference: SemPL grammar: <http://coccinelle.lip6.fr/docs/main_grammar.pdf>
+
+Start simple: only look for `typedef xxx`
+
+```
+@@
+identifier i1;
+type i2;
+@@
+
+* typedef struct i1 { ...} i2;
+```
+
+Verify syntax of semantic patch
+
+```
+spatch --parse-cocci wk4/ex_2_4_1.cocci
+```
+
+Run semantic patch
+
+2.4.1: Find occurrences only
+
+```
+spatch --sp-file wk4/ex_2_4_1.cocci --dir ~/linux-mainline/kernel
+```
+
+Result:
+
+```
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch --very-quiet
+--sp-file wk4/ex_2_4_1.cocci --dir ~/linux-mainline/kernel
+diff -u -p /home/gmacario/linux-mainline/kernel/debug/kdb/kdb_main.c /tmp/nothing/debug/kdb/kdb_main.c
+--- /home/gmacario/linux-mainline/kernel/debug/kdb/kdb_main.c
++++ /tmp/nothing/debug/kdb/kdb_main.c
+@@ -95,10 +95,6 @@ static kdbtab_t kdb_base_commands[KDB_BA
+             num < kdb_max_commands;                                    \
+             num++, num == KDB_BASE_CMD_MAX ? cmd = kdb_commands : cmd++)
+
+-typedef struct _kdbmsg {
+-       int     km_diag;        /* kdb diagnostic */
+-       char    *km_msg;        /* Corresponding message text */
+-} kdbmsg_t;
+
+ #define KDBMSG(msgnum, text) \
+        { KDB_##msgnum, text }
+trying for __ro_after_init
+trying for __tracer_data
+trying for __tracer_data
+trying for DEFAULT_REBOOT_MODE
+trying for DEFAULT_REBOOT_MODE
+trying for __ro_after_init
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
+```
+
+Discussed with Julia about how the Intel 0 day build service is able to send notifications to only the committers to a change which causes a rule of the semantic patch to be hit.
+
+1. Check-in source tree before the change
+2. Run semantic patch against the whole tree, save output as p1
+3. Check-in source tree including the change
+4. Run semantic patch against the whole tree, save output as p2
+5. If (p1 != p2) notify the committer of the change
+
+```
+cd ~/linux-mainline && git blame -- kernel/debug/kdb/kdb_main.c
+```
+
+Result:
+
+```
+...
+5d5314d6 (Jason Wessel     2010-05-20 21:04:20 -0500   98) typedef struct _kdbmsg {
+5d5314d6 (Jason Wessel     2010-05-20 21:04:20 -0500   99)      int     km_diag;        /* kdb diagnostic */
+5d5314d6 (Jason Wessel     2010-05-20 21:04:20 -0500  100)      char    *km_msg;        /* Corresponding message text */
+5d5314d6 (Jason Wessel     2010-05-20 21:04:20 -0500  101) } kdbmsg_t;
+...
+```
+
+Verify source tree before and after the offending commit
+
+```
+git checkout 5d5314d6^ && git blame -- kernel/debug/kdb/kdb_main.c  
+## fatal: no such path 'kernel/debug/kdb/kdb_main.c' in HEAD
+
+git checkout 5d5314d6  && git blame -- kernel/debug/kdb/kdb_main.c  ## typedef is here
+
+git checkout master
+```
+
+Step 2: Add another rule to search for `struct i1 { ... };`
+
+Discussing with Julia how to supplement cocci output with details about which rule caused which diff ==> no built-in functions for doing that, she suggested to use Python scripting.
+
+Look at examples in `coccinelle/demos/pythoncocci.cocci`
+
+Manual: <https://github.com/coccinelle/coccinelle/blob/master/docs/manual/cocci-python.txt>
+
+Definition of the elements shared between Python and Coccinelle:
+<https://github.com/coccinelle/coccinelle/blob/master/python/coccilib/elems.py>
 
 <!-- EOF -->
