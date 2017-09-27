@@ -1,5 +1,6 @@
 @@
 bool x;
+symbol true, false;
 @@
 
 (
