@@ -1163,9 +1163,193 @@ of_find_compatible_node
 gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
 ```
 
+### Exercise 4.3 Finding potential memory leaks
+
+<!-- 2017-09-27 16:58 CEST -->
+
+> In principle, every get should have an accompanying put, but if there is no put at all in a function, then there may be something about how the function is written that makes it unnecessary. But if there is a put on one execution path and no put on another, then the code may be considered to be suspicious. Write a semantic patch that detects this situation, taking into account the list of functions obtained in the previous two exercises.
+>
+If there appear to be many false positives, revise your semantic patch until most of them are eliminated.
+>
+Note that one some architectures, device nodes are not actually reference counted (ie, the get and put functions are no-ops), and thus some seeming leaks may never leak memory in practice.
+
+```
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch --very-quiet --sp-file wk4/ex_4_3.cocci --dir ~/linux-mainline/drivers/iommu
+diff -u -p /home/gmacario/linux-mainline/drivers/iommu/fsl_pamu.c /tmp/nothing/fsl_pamu.c
+--- /home/gmacario/linux-mainline/drivers/iommu/fsl_pamu.c
++++ /tmp/nothing/fsl_pamu.c
+@@ -576,7 +576,6 @@ found_cpu_node:
+                of_node_put(node);
+
+                /* advance to next node in cache hierarchy */
+-               node = of_find_node_by_phandle(*prop);
+                if (!node) {
+                        pr_debug("Invalid node for cache hierarchy\n");
+                        return ~(u32)0;
+@@ -585,7 +584,6 @@ found_cpu_node:
+...
+```
+
+### Exercise 4.4 Finding device node iterators
+
+<!-- 2017-09-27 17:09 CEST -->
+
+> A number of iterators are defined for processing device nodes.
+> These typically have one argument that is the index variable and that
+> is a local variable of type `struct device_node *` that has not been
+> previously initialized. Write a semantic patch analogous to the ones
+> developed for exercises 4.1 and 4.2 to find the names of these iterators
+> and the number of arguments preceding the index variable
+
+```
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)$ spatch --very-quiet --sp-file wk4/ex_4_4.cocci --dir ~/linux-mainline/drivers/clk
+for_each_child_of_node 1
+for_each_matching_node 0
+for_each_matching_node 0
+for_each_compatible_node 0
+for_each_compatible_node 0
+for_each_child_of_node 1
+for_each_matching_node_and_match 0
+for_each_child_of_node 1
+for_each_child_of_node 1
+for_each_child_of_node 1
+for_each_child_of_node 1
+for_each_child_of_node 1
+for_each_matching_node_and_match 0
+for_each_node_by_type 0
+for_each_available_child_of_node 1
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
+```
+
+Trying my version with additional debugging
+
+```
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch --very-quiet --sp-file wk4/my_4_4.cocci --dir ~/linux-mainline/drivers/clk
+for_each_child_of_node 1
+DEBUG: fp_p[0].file= /home/gmacario/linux-mainline/drivers/clk/tegra/clk-emc.c line= 449
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/tegra/clk-emc.c line= 449
+for_each_child_of_node 1
+DEBUG: fp_p[0].file= /home/gmacario/linux-mainline/drivers/clk/tegra/clk-emc.c line= 449
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/tegra/clk-emc.c line= 493
+for_each_child_of_node 1
+DEBUG: fp_p[0].file= /home/gmacario/linux-mainline/drivers/clk/tegra/clk-emc.c line= 493
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/tegra/clk-emc.c line= 449
+for_each_child_of_node 1
+DEBUG: fp_p[0].file= /home/gmacario/linux-mainline/drivers/clk/tegra/clk-emc.c line= 493
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/tegra/clk-emc.c line= 493
+for_each_child_of_node 1
+DEBUG: fp_p[0].file= /home/gmacario/linux-mainline/drivers/clk/at91/sckc.c line= 419
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/at91/sckc.c line= 419
+for_each_child_of_node 1
+DEBUG: fp_p[0].file= /home/gmacario/linux-mainline/drivers/clk/at91/clk-generated.c line= 302
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/at91/clk-generated.c line= 302
+for_each_child_of_node 1
+DEBUG: fp_p[0].file= /home/gmacario/linux-mainline/drivers/clk/at91/clk-programmable.c line= 257
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/at91/clk-programmable.c line= 257
+for_each_child_of_node 1
+DEBUG: fp_p[0].file= /home/gmacario/linux-mainline/drivers/clk/at91/clk-system.c line= 145
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/at91/clk-system.c line= 145
+for_each_child_of_node 1
+DEBUG: fp_p[0].file= /home/gmacario/linux-mainline/drivers/clk/at91/clk-peripheral.c line= 401
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/at91/clk-peripheral.c line= 401
+for_each_matching_node_and_match 0
+DEBUG: fp_p[0].file= /home/gmacario/linux-mainline/drivers/clk/clk.c line= 3430
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/clk.c line= 3458
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
+```
+
+Check source
+
+```
+cat -n ~/linux-mainline/drivers/clk/tegra/clk-emc.c
+```
+
+Does not work as expected.
+Julia suggests to have separate Python script called when each of the above rules `fromparam`, `r` are hit
+
+```
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$ spatch --very-quiet --sp-file wk4/my_4_4.cocci --dir ~/linux-mainline/drivers/clk
+DEBUG: fp_p[0].file= /home/gmacario/linux-mainline/drivers/clk/sunxi/clk-sun8i-bus-gates.c line= 69
+DEBUG: fp_p[0].file= /home/gmacario/linux-mainline/drivers/clk/sunxi/clk-simple-gates.c line= 58
+for_each_child_of_node 1
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/clk-si5351.c line= 1189
+for_each_matching_node 0
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/ti/clockdomain.c line= 173
+for_each_matching_node 0
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/ti/clk.c line= 438
+for_each_compatible_node 0
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/imx/clk-imx27.c line= 260
+for_each_compatible_node 0
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/imx/clk-imx31.c line= 224
+for_each_child_of_node 1
+DEBUG: fp_p[0].file= /home/gmacario/linux-mainline/drivers/clk/tegra/clk-emc.c line= 449
+DEBUG: fp_p[0].file= /home/gmacario/linux-mainline/drivers/clk/tegra/clk-emc.c line= 493
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/tegra/clk-emc.c line= 449
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/tegra/clk-emc.c line= 493
+for_each_matching_node_and_match 0
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/samsung/clk.c line= 293
+for_each_child_of_node 1
+DEBUG: fp_p[0].file= /home/gmacario/linux-mainline/drivers/clk/at91/sckc.c line= 419
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/at91/sckc.c line= 419
+for_each_child_of_node 1
+DEBUG: fp_p[0].file= /home/gmacario/linux-mainline/drivers/clk/at91/clk-generated.c line= 302
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/at91/clk-generated.c line= 302
+for_each_child_of_node 1
+DEBUG: fp_p[0].file= /home/gmacario/linux-mainline/drivers/clk/at91/clk-programmable.c line= 257
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/at91/clk-programmable.c line= 257
+for_each_child_of_node 1
+DEBUG: fp_p[0].file= /home/gmacario/linux-mainline/drivers/clk/at91/clk-system.c line= 145
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/at91/clk-system.c line= 145
+for_each_child_of_node 1
+DEBUG: fp_p[0].file= /home/gmacario/linux-mainline/drivers/clk/at91/clk-peripheral.c line= 401
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/at91/clk-peripheral.c line= 401
+DEBUG: fp_p[0].file= /home/gmacario/linux-mainline/drivers/clk/ux500/u8500_of_clk.c line= 545
+for_each_matching_node_and_match 0
+DEBUG: fp_p[0].file= /home/gmacario/linux-mainline/drivers/clk/clk.c line= 3430
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/clk.c line= 3458
+for_each_node_by_type 0
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/mvebu/clk-cpu.c line= 186
+DEBUG: fp_p[0].file= /home/gmacario/linux-mainline/drivers/clk/clk-conf.c line= 88
+for_each_available_child_of_node 1
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/clk-scpi.c line= 285
+DEBUG: r_p[0].file= /home/gmacario/linux-mainline/drivers/clk/clk-scpi.c line= 270
+gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
+```
+
+TODO: Add `--debug` when running spatch to understand what really happens.
+
+```
+spatch --debug --sp-file wk4/my_4_4.cocci --dir ~/linux-mainline/drivers/clk &> spatch.log
+less spatch.log
+```
+
 TODO
 
+<!-- 2017-09-28 09:30 CEST -->
+
+Julia: Investigate the `spgen` tool to transform the Semantic Patch adding reporting mode.
+
+For the Linux kernel
+
+- patch
+- report
+- put context
+- Emacs mode
+
+Discussion with Markus Kreidl (OpenTech) about integrating the Patch Impact Checker with Coccinelle to filter out unnecessary output when applying a semantic patch which does not affect a given kernel configuration.
+
+The PIC code will be released in about two weeks - now cleaning it up to provide data to Nicholas for assessing the maturity of the linux-stable kernel.
+
+
+### Exercise 4.5 Finding device node iterator memory leaks
+
+TODO
+
+### Exercise 4.6 Finding device node iterator double frees
+
+TODO
 ...
+
 
 # Additional exercises
 
@@ -1189,6 +1373,9 @@ From <http://lists.osadl.org/pipermail/sil2linuxmp/2017-September/000482.html>
 > We, the root-cause analysis team, are continuing to analyse the bugs and see if we can find one that is suitable for detection with coccinelle. I hope Andreas can provide you the further pointers to the pre-existing root-cause analyses that are suitable for detection with coccinelle, if we don’t find suitable bug fixes.
 
 <https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/commit/?id=6090bfb684a9985e29c3c0aae52a4b93f967e90f>
+
+
+Markus K
 
 ```
 TODO
