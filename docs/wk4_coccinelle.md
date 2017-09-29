@@ -1535,6 +1535,44 @@ Discussed with Julia about the additional utility `pycocci` and whether that pro
 
 <!-- 2017-09-28 12:55 CEST -->
 
+```
+cd ~/linux-mainline && spatch --sp-file ~/github/gmacario/learning-coccinelle/wk4/ex_4_6.cocci drivers/soc
+```
+
+Result:
+
+```
+gmacario@ies-genbld01-ub16:~/linux-mainline (master)*$ cd ~/linux-mainline && spatch --sp-file ~/github/gmacario/learning-coccinelle/wk4/ex_4_6.cocci drivers/soc
+init_defs_builtins: /usr/local/lib/coccinelle/standard.h
+9 files match
+HANDLING: drivers/soc/ti/knav_qmss_queue.c
+HANDLING: drivers/soc/tegra/pmc.c
+diff =
+diff -u -p drivers/soc/tegra/pmc.c /tmp/nothing/tegra/pmc.c
+--- drivers/soc/tegra/pmc.c
++++ /tmp/nothing/tegra/pmc.c
+@@ -918,9 +918,7 @@ static void tegra_powergate_init(struct
+        if (!np)
+                return;
+
+-       for_each_child_of_node(np, child) {
+                tegra_powergate_add(pmc, child);
+-               of_node_put(child);
+        }
+
+        of_node_put(np);
+HANDLING: drivers/soc/sunxi/sunxi_sram.c
+HANDLING: drivers/soc/samsung/pm_domains.c
+HANDLING: drivers/soc/rockchip/pm_domains.c
+HANDLING: drivers/soc/imx/gpcv2.c
+HANDLING: drivers/soc/imx/gpc.c
+HANDLING: drivers/soc/fsl/qe/qe.c
+HANDLING: drivers/soc/dove/pmu.c
+gmacario@ies-genbld01-ub16:~/linux-mainline (master)*$
+```
+
+Review the SmPL grammar: <http://coccinelle.lip6.fr/docs/main_grammar.pdf>
+
 TODO
 
 ...
@@ -1550,30 +1588,32 @@ From <http://lists.osadl.org/pipermail/sil2linuxmp/2017-September/000482.html>
 
 > Hi all, hi coccinelle scripters,
 >
-> While scanning through the commits on the linux-stable repository as part of the root-cause analysis activities, I found this bug fix which might be suitable for detection with coccinelle:
+> While scanning through the commits on the linux-stable repository as part
+> of the root-cause analysis activities, I found this bug fix which might
+> be suitable for detection with coccinelle:
 >
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.gi
-> t/commit/?id=6090bfb684a9985e29c3c0aae52a4b93f967e90f
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/commit/?id=6090bfb684a9985e29c3c0aae52a4b93f967e90f
 >
-> For the root-cause analysis, we are currently not considering to do a further root-cause analysis, as apparmor is not part of the current image and we do not intend to use apparmor.
+> For the root-cause analysis, we are currently not considering to do
+> a further root-cause analysis, as apparmor is not part of the current
+> image and we do not intend to use apparmor.
 >
-> So, just in case you lack any further coccinelle exercises and would like to write a script to detect issues in apparmor, please go ahead.
+> So, just in case you lack any further coccinelle exercises and would like
+> to write a script to detect issues in apparmor, please go ahead.
 >
-> We, the root-cause analysis team, are continuing to analyse the bugs and see if we can find one that is suitable for detection with coccinelle. I hope Andreas can provide you the further pointers to the pre-existing root-cause analyses that are suitable for detection with coccinelle, if we don’t find suitable bug fixes.
+> We, the root-cause analysis team, are continuing to analyse the bugs
+> and see if we can find one that is suitable for detection with coccinelle.
+> I hope Andreas can provide you the further pointers to the pre-existing
+> root-cause analyses that are suitable for detection with coccinelle,
+> if we don’t find suitable bug fixes.
 
 <https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/commit/?id=6090bfb684a9985e29c3c0aae52a4b93f967e90f>
 
-
-Markus K
-
-```
-TODO
-```
 
 Cfr. Julia reply: <http://lists.osadl.org/pipermail/sil2linuxmp/2017-September/000483.html>
 
 # See also
 
-* Mailing List: <https://systeme.lip6.fr/mailman/listinfo/cocci>
+* Coccinelle Mailing List: <https://systeme.lip6.fr/mailman/listinfo/cocci>
 
 <!-- EOF -->
