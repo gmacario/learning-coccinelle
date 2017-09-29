@@ -1343,11 +1343,238 @@ The PIC code will be released in about two weeks - now cleaning it up to provide
 
 ### Exercise 4.5 Finding device node iterator memory leaks
 
+<!-- 2017-09-28 09:45 CEST -->
+
+```
+cd ~/linux-mainline && spatch --sp-file ~/github/gmacario/learning-coccinelle/wk4/ex_4_5.cocci --dir drivers/pinctrl >spatch.log
+```
+
+Result
+
+```
+gmacario@ies-genbld01-ub16:~ $ cd ~/linux-mainline && spatch --sp-file ~/github/gmacario/learning-coccinelle/wk4/ex_4_5.cocci --dir drivers/pinctrl >spatch.log
+init_defs_builtins: /usr/local/lib/coccinelle/standard.h
+32 files match
+HANDLING: drivers/pinctrl/freescale/pinctrl-imx.c
+     (ONCE) already tagged but only removed, so safe
+diff =
+HANDLING: drivers/pinctrl/freescale/pinctrl-imx1-core.c
+HANDLING: drivers/pinctrl/freescale/pinctrl-mxs.c
+diff =
+HANDLING: drivers/pinctrl/mediatek/pinctrl-mtk-common.c
+HANDLING: drivers/pinctrl/meson/pinctrl-meson.c
+diff =
+HANDLING: drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
+HANDLING: drivers/pinctrl/nomadik/pinctrl-abx500.c
+diff =
+HANDLING: drivers/pinctrl/nomadik/pinctrl-nomadik.c
+diff =
+HANDLING: drivers/pinctrl/pinconf-generic.c
+HANDLING: drivers/pinctrl/pinctrl-at91-pio4.c
+HANDLING: drivers/pinctrl/pinctrl-at91.c
+HANDLING: drivers/pinctrl/pinctrl-falcon.c
+diff =
+HANDLING: drivers/pinctrl/pinctrl-gemini.c
+diff =
+HANDLING: drivers/pinctrl/pinctrl-lantiq.c
+HANDLING: drivers/pinctrl/pinctrl-rockchip.c
+HANDLING: drivers/pinctrl/pinctrl-rza1.c
+diff =
+HANDLING: drivers/pinctrl/pinctrl-st.c
+diff =
+HANDLING: drivers/pinctrl/pinctrl-tb10x.c
+HANDLING: drivers/pinctrl/pinctrl-tz1090-pdc.c
+diff =
+HANDLING: drivers/pinctrl/pinctrl-tz1090.c
+diff =
+HANDLING: drivers/pinctrl/samsung/pinctrl-exynos.c
+diff =
+HANDLING: drivers/pinctrl/samsung/pinctrl-exynos5440.c
+diff =
+HANDLING: drivers/pinctrl/samsung/pinctrl-s3c24xx.c
+HANDLING: drivers/pinctrl/samsung/pinctrl-s3c64xx.c
+HANDLING: drivers/pinctrl/samsung/pinctrl-samsung.c
+diff =
+HANDLING: drivers/pinctrl/sh-pfc/pinctrl.c
+HANDLING: drivers/pinctrl/sirf/pinctrl-sirf.c
+HANDLING: drivers/pinctrl/spear/pinctrl-spear.c
+diff =
+HANDLING: drivers/pinctrl/sprd/pinctrl-sprd.c
+diff =
+HANDLING: drivers/pinctrl/stm32/pinctrl-stm32.c
+diff =
+HANDLING: drivers/pinctrl/tegra/pinctrl-tegra-xusb.c
+HANDLING: drivers/pinctrl/tegra/pinctrl-tegra.c
+gmacario@ies-genbld01-ub16:~/linux-mainline (master)*$
+```
+
+Contents of `spatch.log`
+
+```
+diff -u -p drivers/pinctrl/freescale/pinctrl-imx.c /tmp/nothing/freescale/pinctrl-imx.c
+--- drivers/pinctrl/freescale/pinctrl-imx.c
++++ /tmp/nothing/freescale/pinctrl-imx.c
+@@ -560,13 +560,11 @@ static int imx_pinctrl_parse_functions(s
+        if (!func->group_names)
+                return -ENOMEM;
+
+-       for_each_child_of_node(np, child) {
+                func->group_names[i] = child->name;
+
+                grp = devm_kzalloc(info->dev, sizeof(struct group_desc),
+                                   GFP_KERNEL);
+                if (!grp)
+-                       return -ENOMEM;
+
+                mutex_lock(&info->mutex);
+                radix_tree_insert(&pctl->pin_group_tree,
+@@ -589,13 +587,9 @@ static bool imx_pinctrl_dt_is_flat_funct
+...  
+```
+
+Count number of occurrences
+
+```
+gmacario@ies-genbld01-ub16:~/linux-mainline (master)*$ grep '^-' spatch.log | grep -v '^---' | wc -l
+54
+gmacario@ies-genbld01-ub16:~/linux-mainline (master)*$
+```
+
+See also: `linux-mainline/scripts/coccinelle/iterators/device_node_continue.cocci`
+
+<!-- 2017-09-28 10:28 CEST -->
+
+Trying the `spgen` tool as suggested by Julia
+
+```
+spgen --help
+man spgen
+```
+
+See also: <https://github.com/coccinelle/coccinelle/tree/master/tools/spgen>
+
+Trying spgen to harden `my_4_5.cocci`
+
+```
+cd ~/github/gmacario/learning-coccinelle/wk4
+spgen --default my_4_5.cocci -o my_4_5.cocci2
+```
+
+Alternatively, you may remove the `--default` and run spgen in interactive mode to be able to supply all the additional parameters.
+
+The configuration will be saved to file `my_4_5.config`.
+
+Generated file
+
+```
+...
+@rule_0 depends on context || org || report@
+iterator i;
+expression n;
+position start.p;
+position j0, j1;
+@@
+
+* i@j0(...,n@p,...)
+{
+  ... when any
+      when != of_node_put(n)
+*  return@j1 ...;
+}
+
+// ----------------------------------------------------------------------------
+
+@script:python rule_0_org depends on org@
+j0 << rule_0.j0;
+j1 << rule_0.j1;
+@@
+
+msg = "found a match around here ..."
+coccilib.org.print_todo(j0[0], msg)
+coccilib.org.print_link(j1[0], "")
+
+// ----------------------------------------------------------------------------
+
+@script:python rule_0_report depends on report@
+j0 << rule_0.j0;
+j1 << rule_0.j1;
+@@
+
+msg = "found a match around here .. around line %s." % (j1[0].line)
+coccilib.report.print_report(j0[0], msg)
+```
+
+Run the Semantic patch in `report` mode (default)
+
+```
 TODO
+```
+
+Run the Semantic patch in `org` mode (the TODO messages come from statement `coccilib.org.print_todo(j0[0], msg)`)
+
+```
+TODO
+```
+
+Run the Semantic patch in `context` mode
+
+```
+TODO
+```
+
+Reference about the different available modes: See
+* Doc `linux-mainline/Documentation/dev-tools/coccinelle.rst`
+* <https://bottest.wiki.kernel.org/coccicheck>
+
+Read `man coccilib` to know the APIs for `coccilib.org.xxx`, `coccilib.report.xxx`.
+Unfortunately the man page seems incomplete, should rather look at source code instead: <https://github.com/coccinelle/coccinelle/blob/master/ocaml/coccilib.ml>
+
+Discussed with Julia about the additional utility `pycocci` and whether that provides additional value. According to Julia this wrapper was developed once Coccinelle did not support parallelism well, but as of today there are no compelling reasons to use it any longer - some developers still prefer it just because that helps using the most common options of spatch.
 
 ### Exercise 4.6 Finding device node iterator double frees
 
+<!-- 2017-09-28 12:55 CEST -->
+
+```
+cd ~/linux-mainline && spatch --sp-file ~/github/gmacario/learning-coccinelle/wk4/ex_4_6.cocci drivers/soc
+```
+
+Result:
+
+```
+gmacario@ies-genbld01-ub16:~/linux-mainline (master)*$ cd ~/linux-mainline && spatch --sp-file ~/github/gmacario/learning-coccinelle/wk4/ex_4_6.cocci drivers/soc
+init_defs_builtins: /usr/local/lib/coccinelle/standard.h
+9 files match
+HANDLING: drivers/soc/ti/knav_qmss_queue.c
+HANDLING: drivers/soc/tegra/pmc.c
+diff =
+diff -u -p drivers/soc/tegra/pmc.c /tmp/nothing/tegra/pmc.c
+--- drivers/soc/tegra/pmc.c
++++ /tmp/nothing/tegra/pmc.c
+@@ -918,9 +918,7 @@ static void tegra_powergate_init(struct
+        if (!np)
+                return;
+
+-       for_each_child_of_node(np, child) {
+                tegra_powergate_add(pmc, child);
+-               of_node_put(child);
+        }
+
+        of_node_put(np);
+HANDLING: drivers/soc/sunxi/sunxi_sram.c
+HANDLING: drivers/soc/samsung/pm_domains.c
+HANDLING: drivers/soc/rockchip/pm_domains.c
+HANDLING: drivers/soc/imx/gpcv2.c
+HANDLING: drivers/soc/imx/gpc.c
+HANDLING: drivers/soc/fsl/qe/qe.c
+HANDLING: drivers/soc/dove/pmu.c
+gmacario@ies-genbld01-ub16:~/linux-mainline (master)*$
+```
+
+Review the SmPL grammar: <http://coccinelle.lip6.fr/docs/main_grammar.pdf>
+
 TODO
+
 ...
 
 
@@ -1361,26 +1588,32 @@ From <http://lists.osadl.org/pipermail/sil2linuxmp/2017-September/000482.html>
 
 > Hi all, hi coccinelle scripters,
 >
-> While scanning through the commits on the linux-stable repository as part of the root-cause analysis activities, I found this bug fix which might be suitable for detection with coccinelle:
+> While scanning through the commits on the linux-stable repository as part
+> of the root-cause analysis activities, I found this bug fix which might
+> be suitable for detection with coccinelle:
 >
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.gi
-> t/commit/?id=6090bfb684a9985e29c3c0aae52a4b93f967e90f
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/commit/?id=6090bfb684a9985e29c3c0aae52a4b93f967e90f
 >
-> For the root-cause analysis, we are currently not considering to do a further root-cause analysis, as apparmor is not part of the current image and we do not intend to use apparmor.
+> For the root-cause analysis, we are currently not considering to do
+> a further root-cause analysis, as apparmor is not part of the current
+> image and we do not intend to use apparmor.
 >
-> So, just in case you lack any further coccinelle exercises and would like to write a script to detect issues in apparmor, please go ahead.
+> So, just in case you lack any further coccinelle exercises and would like
+> to write a script to detect issues in apparmor, please go ahead.
 >
-> We, the root-cause analysis team, are continuing to analyse the bugs and see if we can find one that is suitable for detection with coccinelle. I hope Andreas can provide you the further pointers to the pre-existing root-cause analyses that are suitable for detection with coccinelle, if we don’t find suitable bug fixes.
+> We, the root-cause analysis team, are continuing to analyse the bugs
+> and see if we can find one that is suitable for detection with coccinelle.
+> I hope Andreas can provide you the further pointers to the pre-existing
+> root-cause analyses that are suitable for detection with coccinelle,
+> if we don’t find suitable bug fixes.
 
 <https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git/commit/?id=6090bfb684a9985e29c3c0aae52a4b93f967e90f>
 
 
-Markus K
-
-```
-TODO
-```
-
 Cfr. Julia reply: <http://lists.osadl.org/pipermail/sil2linuxmp/2017-September/000483.html>
+
+# See also
+
+* Coccinelle Mailing List: <https://systeme.lip6.fr/mailman/listinfo/cocci>
 
 <!-- EOF -->
