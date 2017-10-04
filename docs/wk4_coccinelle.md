@@ -541,7 +541,7 @@ gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
 
 -----------------------------------------
 
-## 2.4 Eliminate typedefs
+### 2.4 Eliminate typedefs
 
 <!-- 2017-09-27 09:00 CEST -->
 
@@ -668,18 +668,20 @@ coccinelle.nm = cocci.make_ident(i2)
 
 Notice that you always need to prefix variables `coccinelle.xxx` to have them pass values back to other rules - see pythoncocci.cocci
 
-## 2.5
+### 2.5
 
 Skipped
 
-## 2.6
+### 2.6
 
 Skipped
 
 
-## 3.1 Simplify tests on boolean values
+## 3 Booleans
 
-### Exercise 3.1.1
+### 3.1 Simplify tests on boolean values
+
+#### Exercise 3.1.1
 
 <!-- 2017-09-27 13:00 CEST -->
 
@@ -854,19 +856,21 @@ gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
 TODO
 
 
-### Exercise 3.1.3
+#### Exercise 3.1.3
 
 TODO
 
-### Exercise 3.2
+#### Exercise 3.2
 
 TODO
 
-### Exercise 3.3
+#### Exercise 3.3
 
 TODO
 
-### Exercise 4.1
+## 4. Device nodes
+
+### Exercise 4.1 Finding the relevant functions
 
 <!-- 2017-09-27 15:50 CEST -->
 
