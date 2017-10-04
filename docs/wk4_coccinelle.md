@@ -868,7 +868,7 @@ TODO
 
 TODO
 
-## 4. Device nodes
+## 4 Device nodes
 
 ### Exercise 4.1 Finding the relevant functions
 
@@ -1582,9 +1582,9 @@ TODO
 ...
 
 
-# Additional exercises
+## Additional exercises
 
-## apparmor: Fix ref count leak
+### apparmor: Fix ref count leak
 
 <!-- 2017-09-27 14:13 -->
 
