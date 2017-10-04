@@ -29,7 +29,7 @@ tar xvzf wk4_exercises.tar.gz
 
 ## 2 Introductory Exercises
 
-### 2.1 Eliminating unnecessary temporary variables
+### Exercise 2.1 Eliminating unnecessary temporary variables
 
 #### 2.1.1 Write a semantic patch to make this transformation
 
@@ -289,7 +289,7 @@ gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)$
 
 BUG: This patch has too enthusiastic and removes also unrelated variables!
 
-### 2.2  Eliminating unnecessary parentheses
+### Exercise 2.2 Eliminating unnecessary parentheses
 
 #### 2.2.1 Write a semantic patch to remove parentheses around the right hand side of an assignment
 
@@ -355,7 +355,7 @@ gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
 
 On `linux-mainline/block`: 13+ 13-
 
-### 2.3 Eliminating unnecessary prints
+### Exercise 2.3 Eliminating unnecessary prints
 
 <!-- 2017-09-26 16:23 CEST -->
 
@@ -541,7 +541,7 @@ gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
 
 -----------------------------------------
 
-### 2.4 Eliminate typedefs
+### Exercise 2.4 Eliminate typedefs
 
 <!-- 2017-09-27 09:00 CEST -->
 
@@ -668,18 +668,18 @@ coccinelle.nm = cocci.make_ident(i2)
 
 Notice that you always need to prefix variables `coccinelle.xxx` to have them pass values back to other rules - see pythoncocci.cocci
 
-### 2.5
+### Exercise 2.5 Use list_for_each_entry
 
 Skipped
 
-### 2.6
+### Exercise 2.6 Issues around static functions
 
 Skipped
 
 
 ## 3 Booleans
 
-### 3.1 Simplify tests on boolean values
+### Exercise 3.1 Simplify tests on boolean values
 
 #### Exercise 3.1.1
 
@@ -756,7 +756,7 @@ HANDLING: /home/gmacario/linux-mainline/drivers/char/random.c
 gmacario@ies-genbld01-ub16:~/github/gmacario/learning-coccinelle (wk4)*$
 ```
 
-### Exercise 3.1.2
+#### Exercise 3.1.2
 
 <!-- 2017-09-27 14:40 CEST -->
 
@@ -860,11 +860,11 @@ TODO
 
 TODO
 
-#### Exercise 3.2
+### Exercise 3.2 Use true and false rather than 1 and 0
 
 TODO
 
-#### Exercise 3.3
+### Exercise 3.3 Avoid mixing bool with other types
 
 TODO
 
