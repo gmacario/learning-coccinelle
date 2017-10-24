@@ -1,0 +1,536 @@
+INFO: Mon Oct 23 16:29:52 IST 2017: Script start
+INFO: Saving logfile to coccicheck-90dcab23bbc81fbfa25dfdb91d4ce974a69bd210.log
+INFO: hostname=ies-genbld01-ub16
+INFO: spatch_version=spatch version 1.0.6-00242-g3f038a5 compiled with OCaml version 4.02.3
+INFO: COCCI_DIR=/home/gmacario/linux-mainline/scripts/coccinelle
+INFO: COCCI_SHA=9e66317d3c92ddaab330c125dfe9d06eee268aff
+INFO: SRC_DIR=/home/gmacario/minimized-tree
+INFO: SRC_SHA=90dcab23bbc81fbfa25dfdb91d4ce974a69bd210
+================================================================================================
+INFO: Applying SmPL 1: /home/gmacario/linux-mainline/scripts/coccinelle/api/alloc/alloc_cast.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/api/alloc/alloc_cast.cocci --dir .
+./fs/proc/inode.c:49:7-24: WARNING: casting value returned by memory allocation function to (struct proc_inode *) is useless.
+INFO: Mon Oct 23 16:30:41 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 2: /home/gmacario/linux-mainline/scripts/coccinelle/api/alloc/kzalloc-simple.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/api/alloc/kzalloc-simple.cocci --dir .
+INFO: Mon Oct 23 16:31:02 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 3: /home/gmacario/linux-mainline/scripts/coccinelle/api/alloc/pool_zalloc-simple.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/api/alloc/pool_zalloc-simple.cocci --dir .
+./drivers/usb/host/xhci-mem.c:517:12-13: WARNING: *_pool_zalloc should be used for ctx -> bytes, instead of *_pool_alloc/memset
+./drivers/usb/host/xhci-mem.c:47:11-12: WARNING: *_pool_zalloc should be used for seg -> trbs, instead of *_pool_alloc/memset
+./drivers/usb/host/uhci-q.c:251:4-5: WARNING: *_pool_zalloc should be used for qh, instead of *_pool_alloc/memset
+./drivers/dma/ioat/init.c:699:23-24: WARNING: *_pool_zalloc should be used for ioat_chan -> completion, instead of *_pool_alloc/memset
+./drivers/dma/ioat/dma.c:297:4-5: WARNING: *_pool_zalloc should be used for hw, instead of *_pool_alloc/memset
+INFO: Mon Oct 23 16:31:03 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 4: /home/gmacario/linux-mainline/scripts/coccinelle/api/debugfs/debugfs_simple_attr.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/api/debugfs/debugfs_simple_attr.cocci --dir .
+INFO: Mon Oct 23 16:31:04 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 5: /home/gmacario/linux-mainline/scripts/coccinelle/api/d_find_alias.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/api/d_find_alias.cocci --dir .
+INFO: Mon Oct 23 16:31:07 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 6: /home/gmacario/linux-mainline/scripts/coccinelle/api/drm-get-put.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/api/drm-get-put.cocci --dir .
+INFO: Mon Oct 23 16:31:08 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 7: /home/gmacario/linux-mainline/scripts/coccinelle/api/err_cast.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/api/err_cast.cocci --dir .
+INFO: Mon Oct 23 16:31:25 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 8: /home/gmacario/linux-mainline/scripts/coccinelle/api/kstrdup.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/api/kstrdup.cocci --dir .
+INFO: Mon Oct 23 16:31:35 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 9: /home/gmacario/linux-mainline/scripts/coccinelle/api/memdup.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/api/memdup.cocci --dir .
+INFO: Mon Oct 23 16:31:40 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 10: /home/gmacario/linux-mainline/scripts/coccinelle/api/memdup_user.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/api/memdup_user.cocci --dir .
+./drivers/tty/vt/keyboard.c:1555:9-16: WARNING opportunity for memdup_user
+./drivers/tty/vt/keyboard.c:1598:9-16: WARNING opportunity for memdup_user
+./drivers/mmc/card/block.c:352:14-21: WARNING opportunity for memdup_user
+./drivers/usb/core/devio.c:1391:11-18: WARNING opportunity for memdup_user
+INFO: Mon Oct 23 16:31:51 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 11: /home/gmacario/linux-mainline/scripts/coccinelle/api/platform_no_drv_owner.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/api/platform_no_drv_owner.cocci --dir .
+INFO: Mon Oct 23 16:31:53 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 12: /home/gmacario/linux-mainline/scripts/coccinelle/api/pm_runtime.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/api/pm_runtime.cocci --dir .
+INFO: Mon Oct 23 16:31:54 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 13: /home/gmacario/linux-mainline/scripts/coccinelle/api/ptr_ret.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/api/ptr_ret.cocci --dir .
+./drivers/dca/dca-sysfs.c:39:1-3: WARNING: PTR_ERR_OR_ZERO can be used
+./fs/sysfs/group.c:408:8-14: WARNING: PTR_ERR_OR_ZERO can be used
+INFO: Mon Oct 23 16:32:21 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 14: /home/gmacario/linux-mainline/scripts/coccinelle/api/resource_size.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/api/resource_size.cocci --dir .
+INFO: Mon Oct 23 16:33:16 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 15: /home/gmacario/linux-mainline/scripts/coccinelle/api/setup_timer.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/api/setup_timer.cocci --dir .
+./drivers/tty/serial/8250/8250_core.c:407:2-12: Use setup_timer function for function on line 408.
+./drivers/usb/core/hcd.c:2341:1-11: Use setup_timer function for function on line 2342.
+./drivers/usb/core/hcd.c:2341:1-11: Use setup_timer function for function on line 2342.
+./drivers/usb/core/hcd.c:2341:1-11: Use setup_timer function for function on line 2342.
+./drivers/dma/ioat/init.c:762:1-11: Use setup_timer function for function on line 763.
+./drivers/dma/ioat/init.c:762:1-11: Use setup_timer function for function on line 763.
+./drivers/dma/ioat/init.c:762:1-11: Use setup_timer function for function on line 763.
+./kernel/time/clocksource.c:282:1-11: Use setup_timer function for function on line 283.
+./block/cfq-iosched.c:3498:1-11: Use setup_timer function for function on line 3499.
+./block/cfq-iosched.c:3498:1-11: Use setup_timer function for function on line 3499.
+./block/cfq-iosched.c:3498:1-11: Use setup_timer function for function on line 3499.
+INFO: Mon Oct 23 16:33:19 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 16: /home/gmacario/linux-mainline/scripts/coccinelle/api/simple_open.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/api/simple_open.cocci --dir .
+INFO: Mon Oct 23 16:33:20 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 17: /home/gmacario/linux-mainline/scripts/coccinelle/api/vma_pages.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/api/vma_pages.cocci --dir .
+./drivers/base/dma-mapping.c:193:34-40: WARNING: Consider using vma_pages helper on vma
+./mm/interval_tree.c:21:27-33: WARNING: Consider using vma_pages helper on v
+INFO: Mon Oct 23 16:33:24 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 18: /home/gmacario/linux-mainline/scripts/coccinelle/free/clk_put.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/free/clk_put.cocci --dir .
+INFO: Mon Oct 23 16:33:25 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 19: /home/gmacario/linux-mainline/scripts/coccinelle/free/devm_free.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/free/devm_free.cocci --dir .
+INFO: Mon Oct 23 16:33:28 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 20: /home/gmacario/linux-mainline/scripts/coccinelle/free/ifnullfree.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/free/ifnullfree.cocci --dir .
+./drivers/usb/host/ehci-mem.c:132:2-18: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+./drivers/usb/host/ehci-mem.c:141:2-18: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+./drivers/usb/host/ehci-mem.c:145:2-18: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+./drivers/scsi/scsi_lib.c:2281:3-18: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+./drivers/scsi/scsi_lib.c:2283:3-21: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+./fs/ext4/mballoc.c:2336:3-21: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+./fs/ext4/extents_status.c:165:2-20: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+./fs/jbd2/journal.c:2573:2-20: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+./fs/jbd2/journal.c:2575:2-20: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+./fs/jbd2/journal.c:2207:3-21: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+./block/elevator.c:829:3-21: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+./block/blk-core.c:622:2-17: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+./block/bio.c:1841:2-17: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+./block/bio.c:1844:2-17: WARNING: NULL check before freeing functions like kfree, debugfs_remove, debugfs_remove_recursive or usb_free_urb is not needed. Maybe consider reorganizing relevant code to avoid passing NULL values.
+INFO: Mon Oct 23 16:34:14 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 21: /home/gmacario/linux-mainline/scripts/coccinelle/free/iounmap.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/free/iounmap.cocci --dir .
+./drivers/usb/host/pci-quirks.c:974:3-9: ERROR: missing iounmap; ioremap on line 960 and execution via conditional on line 970
+INFO: Mon Oct 23 16:34:19 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 22: /home/gmacario/linux-mainline/scripts/coccinelle/free/kfreeaddr.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/free/kfreeaddr.cocci --dir .
+INFO: Mon Oct 23 16:35:04 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 23: /home/gmacario/linux-mainline/scripts/coccinelle/free/kfree.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/free/kfree.cocci --dir .
+./drivers/acpi/scan.c:651:23-33: ERROR: reference preceded by free on line 646
+./kernel/kthread.c:196:1-7: ERROR: reference preceded by free on line 191
+INFO: Mon Oct 23 16:37:32 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 24: /home/gmacario/linux-mainline/scripts/coccinelle/free/pci_free_consistent.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/free/pci_free_consistent.cocci --dir .
+INFO: Mon Oct 23 16:37:32 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 25: /home/gmacario/linux-mainline/scripts/coccinelle/iterators/device_node_continue.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/iterators/device_node_continue.cocci --dir .
+INFO: Mon Oct 23 16:37:33 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 26: /home/gmacario/linux-mainline/scripts/coccinelle/iterators/fen.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/iterators/fen.cocci --dir .
+INFO: Mon Oct 23 16:37:33 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 27: /home/gmacario/linux-mainline/scripts/coccinelle/iterators/itnull.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/iterators/itnull.cocci --dir .
+./kernel/irq/spurious.c:124:7-8: ERROR: iterator variable bound on line 123 cannot be NULL
+./kernel/irq/spurious.c:151:7-8: ERROR: iterator variable bound on line 148 cannot be NULL
+./fs/ext4/dir.c:375:9-14: ERROR: iterator variable bound on line 374 cannot be NULL
+./arch/x86/kernel/setup_percpu.c:154:7-10: ERROR: iterator variable bound on line 130 cannot be NULL
+./arch/x86/kernel/apic/io_apic.c:1109:6-12: ERROR: iterator variable bound on line 1101 cannot be NULL
+INFO: Mon Oct 23 16:38:49 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 28: /home/gmacario/linux-mainline/scripts/coccinelle/iterators/list_entry_update.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/iterators/list_entry_update.cocci --dir .
+./net/ipv6/addrconf.c:1353:1-20: iterator with update on line 1412
+INFO: Mon Oct 23 16:39:17 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 29: /home/gmacario/linux-mainline/scripts/coccinelle/iterators/use_after_iter.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/iterators/use_after_iter.cocci --dir .
+./kernel/exit.c:330:21-22: ERROR: invalid reference to the index variable of the iterator on line 319
+INFO: Mon Oct 23 16:39:47 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 30: /home/gmacario/linux-mainline/scripts/coccinelle/locks/call_kern.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/locks/call_kern.cocci --dir .
+./drivers/firmware/efi/vars.c:413:22-32: ERROR: function dup_variable_bug called on line 486 inside lock on line 455 but uses GFP_KERNEL
+./drivers/firmware/efi/vars.c:413:22-32: ERROR: function dup_variable_bug called on line 486 inside lock on line 489 but uses GFP_KERNEL
+./drivers/firmware/efi/vars.c:413:22-32: ERROR: function dup_variable_bug called on line 486 inside lock on line 500 but uses GFP_KERNEL
+INFO: Mon Oct 23 16:41:25 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 31: /home/gmacario/linux-mainline/scripts/coccinelle/locks/double_lock.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/locks/double_lock.cocci --dir .
+./fs/dcache.c:882:1-10: second lock on line 882
+./fs/dcache.c:884:2-11: second lock on line 884
+./fs/jbd2/transaction.c:300:1-10: second lock on line 300
+./fs/inode.c:767:2-11: second lock on line 767
+./fs/inode.c:794:2-11: second lock on line 794
+./fs/super.c:659:1-10: second lock on line 659
+./fs/super.c:460:1-10: second lock on line 460
+./fs/fs-writeback.c:800:2-11: second lock on line 870
+./fs/fs-writeback.c:663:1-10: second lock on line 700
+INFO: Mon Oct 23 20:22:49 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 32: /home/gmacario/linux-mainline/scripts/coccinelle/locks/flags.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/locks/flags.cocci --dir .
+INFO: Mon Oct 23 20:23:07 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 33: /home/gmacario/linux-mainline/scripts/coccinelle/locks/mini_lock.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/locks/mini_lock.cocci --dir .
+./net/netfilter/x_tables.c:936:3-9: preceding lock on line 933
+./net/ipv4/inet_connection_sock.c:242:1-7: preceding lock on line 122
+./net/ipv4/inet_connection_sock.c:242:1-7: preceding lock on line 122
+./net/ipv6/mcast.c:425:1-7: preceding lock on line 348
+./lib/lockref.c:77:2-8: preceding lock on line 75
+./lib/lockref.c:121:2-8: preceding lock on line 119
+./lib/dec_and_lock.c:28:2-8: preceding lock on line 26
+./drivers/usb/host/xhci-ring.c:2555:4-10: preceding lock on line 2636
+./drivers/usb/host/xhci-ring.c:2555:4-10: preceding lock on line 2636
+./drivers/usb/host/xhci-ring.c:2647:1-7: preceding lock on line 2636
+./drivers/block/loop.c:1554:3-9: preceding lock on line 1546
+./kernel/exit.c:1484:1-7: preceding lock on line 1456
+./kernel/time/posix-timers.c:686:3-9: preceding lock on line 683
+./kernel/signal.c:1756:3-9: preceding lock on line 1754
+./kernel/futex.c:1974:2-8: preceding lock on line 1968
+./kernel/futex.c:2477:1-7: preceding lock on line 2420
+./fs/direct-io.c:1315:1-7: preceding lock on line 1155
+./fs/block_dev.c:790:2-8: preceding lock on line 801
+./fs/dcache.c:2373:2-8: preceding lock on line 2361
+./fs/jbd2/checkpoint.c:133:3-9: preceding lock on line 130
+./fs/namei.c:4247:1-7: preceding lock on line 4182
+./fs/inode.c:776:1-7: preceding lock on line 767
+./fs/inode.c:803:1-7: preceding lock on line 794
+./fs/inode.c:1327:3-9: preceding lock on line 1314
+./fs/inode.c:1370:3-9: preceding lock on line 1357
+./fs/super.c:667:3-9: preceding lock on line 659
+./fs/super.c:472:3-9: preceding lock on line 460
+./fs/namespace.c:1952:2-8: preceding lock on line 1938
+./fs/fs-writeback.c:1450:3-9: preceding lock on line 1381
+./fs/eventpoll.c:1920:1-7: preceding lock on line 1857
+./fs/file.c:212:2-8: preceding lock on line 222
+./arch/x86/mm/pageattr.c:1257:3-9: preceding lock on line 1252
+./block/blk-core.c:1219:2-8: preceding lock on line 1242
+./mm/percpu.c:991:1-7: preceding lock on line 862
+./mm/percpu.c:991:1-7: preceding lock on line 862
+./mm/percpu.c:1010:1-7: preceding lock on line 862
+./mm/swapfile.c:588:1-7: preceding lock on line 561
+./mm/swapfile.c:588:1-7: preceding lock on line 561
+./mm/swapfile.c:626:1-7: preceding lock on line 527
+./mm/swapfile.c:626:1-7: preceding lock on line 540
+./mm/swapfile.c:626:1-7: preceding lock on line 561
+./mm/swapfile.c:626:1-7: preceding lock on line 594
+./mm/swapfile.c:626:1-7: preceding lock on line 598
+./mm/swapfile.c:626:1-7: preceding lock on line 609
+./mm/swapfile.c:626:1-7: preceding lock on line 613
+INFO: Tue Oct 24 14:21:05 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 34: /home/gmacario/linux-mainline/scripts/coccinelle/misc/array_size.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/misc/array_size.cocci --dir .
+INFO: Tue Oct 24 14:21:20 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 35: /home/gmacario/linux-mainline/scripts/coccinelle/misc/badty.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/misc/badty.cocci --dir .
+INFO: Tue Oct 24 14:22:26 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 36: /home/gmacario/linux-mainline/scripts/coccinelle/misc/boolconv.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/misc/boolconv.cocci --dir .
+./net/core/net_namespace.c:211:42-47: WARNING: conversion to bool not needed here
+./net/core/filter.c:1703:36-41: WARNING: conversion to bool not needed here
+INFO: Tue Oct 24 14:23:30 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 37: /home/gmacario/linux-mainline/scripts/coccinelle/misc/boolinit.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/misc/boolinit.cocci --dir .
+./net/core/filter.c:796:7-16: WARNING: Comparison to bool
+./net/unix/garbage.c:261:26-40: WARNING: Comparison to bool
+./net/ipv6/ndisc.c:482:2-9: WARNING: Assignment of bool to 0/1
+./net/ipv6/exthdrs.c:140:9-29: WARNING: Comparison to bool
+./net/ipv6/exthdrs.c:146:8-36: WARNING: Comparison of bool to 0/1
+./drivers/tty/n_tty.c:187:2-16: WARNING: Assignment of bool to 0/1
+./drivers/tty/n_tty.c:1927:1-15: WARNING: Assignment of bool to 0/1
+./drivers/mmc/core/core.c:61:5-16: WARNING: Assignment of bool to 0/1
+./drivers/usb/phy/phy-generic.c:85:3-25: WARNING: Assignment of bool to 0/1
+./drivers/usb/phy/phy-generic.c:92:3-25: WARNING: Assignment of bool to 0/1
+./drivers/usb/core/hub.c:43:12-25: WARNING: Assignment of bool to 0/1
+./drivers/usb/core/hub.c:72:12-28: WARNING: Assignment of bool to 0/1
+./drivers/usb/core/hub.c:77:12-28: WARNING: Assignment of bool to 0/1
+./drivers/usb/host/ohci-hcd.c:74:12-29: WARNING: Assignment of bool to 0/1
+./drivers/usb/host/ohci-hcd.c:80:12-24: WARNING: Assignment of bool to 0/1
+./drivers/usb/host/ehci-hcd.c:85:12-21: WARNING: Assignment of bool to 0/1
+./drivers/pci/pci.c:4505:6-12: WARNING: Comparison to bool
+./drivers/pci/pci.c:4521:7-13: WARNING: Comparison to bool
+./drivers/acpi/processor_pdc.c:161:5-41: WARNING: Comparison to bool
+./drivers/firmware/efi/vars.c:931:5-48: WARNING: Comparison to bool
+./kernel/rcu/tree.c:2780:14-29: WARNING: Comparison of bool to 0/1
+./kernel/rcu/tree.c:2251:2-20: WARNING: Assignment of bool to 0/1
+./kernel/rcu/tree_plugin.h:1816:1-14: WARNING: Assignment of bool to 0/1
+./kernel/irq/spurious.c:429:1-11: WARNING: Assignment of bool to 0/1
+./kernel/locking/rtmutex.c:1344:6-32: WARNING: Comparison to bool
+./kernel/sysctl.c:1753:6-11: WARNING: Assignment of bool to 0/1
+./kernel/sysctl.c:1826:3-8: WARNING: Assignment of bool to 0/1
+./kernel/sysctl.c:1857:3-8: WARNING: Assignment of bool to 0/1
+./fs/ext4/extents.c:5072:6-12: WARNING: Assignment of bool to 0/1
+./fs/ext4/extents.c:5088:4-10: WARNING: Assignment of bool to 0/1
+./fs/proc/generic.c:336:5-31: WARNING: Comparison to bool
+./fs/ioctl.c:305:4-12: WARNING: Assignment of bool to 0/1
+./arch/x86/kernel/cpu/common.c:343:2-9: WARNING: Assignment of bool to 0/1
+./arch/x86/kernel/cpu/topology.c:92:2-9: WARNING: Assignment of bool to 0/1
+./arch/x86/kernel/fpu/init.c:272:13-24: WARNING: Assignment of bool to 0/1
+./arch/x86/kernel/fpu/init.c:275:1-12: WARNING: Assignment of bool to 0/1
+./mm/mremap.c:567:2-8: WARNING: Assignment of bool to 0/1
+INFO: Tue Oct 24 14:25:28 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 38: /home/gmacario/linux-mainline/scripts/coccinelle/misc/boolreturn.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/misc/boolreturn.cocci --dir .
+./kernel/sched/completion.c:277:9-10: WARNING: return of 0/1 in function 'try_wait_for_completion' with return type bool
+./fs/dcache.c:621:10-11: WARNING: return of 0/1 in function 'fast_dput' with return type bool
+./fs/buffer.c:1443:10-11: WARNING: return of 0/1 in function 'has_bh_in_lru' with return type bool
+./block/elevator.c:66:9-10: WARNING: return of 0/1 in function 'elv_rq_merge_ok' with return type bool
+INFO: Tue Oct 24 14:26:16 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 39: /home/gmacario/linux-mainline/scripts/coccinelle/misc/bugon.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/misc/bugon.cocci --dir .
+./net/ipv4/tcp_output.c:2541:3-6: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./net/ipv4/devinet.c:1691:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./net/ipv4/ping.c:581:3-6: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./net/ipv4/icmp.c:921:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./net/ipv4/inetpeer.c:288:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./net/ipv4/tcp_input.c:4672:5-8: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./net/ipv4/tcp_input.c:4998:4-7: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./net/ipv4/ip_output.c:697:3-6: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./net/xfrm/xfrm_policy.c:310:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./net/core/rtnetlink.c:1890:4-7: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./net/core/skbuff.c:1492:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./net/core/skbuff.c:1083:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./net/core/skbuff.c:985:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./net/core/skbuff.c:1215:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./net/ipv6/addrconf.c:4741:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./lib/percpu_ida.c:67:4-7: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./drivers/base/transport_class.c:113:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./drivers/scsi/scsi_lib.c:844:4-7: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./drivers/scsi/scsi_lib.c:902:3-6: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./kernel/notifier.c:516:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./kernel/module.c:870:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./kernel/softirq.c:403:5-8: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./kernel/softirq.c:439:5-8: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./kernel/sched/core.c:5684:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./kernel/cpuset.c:2088:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./kernel/cpuset.c:2090:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./kernel/cpuset.c:2106:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./fs/jbd2/transaction.c:2268:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./fs/proc/base.c:1674:4-7: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./fs/attr.c:251:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./arch/x86/mm/tlb.c:41:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./arch/x86/mm/fault.c:240:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./arch/x86/mm/fault.c:251:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./arch/x86/mm/fault.c:268:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./block/blk-mq.c:303:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./mm/workingset.c:355:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./mm/readahead.c:47:3-6: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./mm/mmap.c:568:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./mm/mmap.c:2804:3-6: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./mm/mmap.c:2821:3-6: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./mm/mmap.c:2905:3-6: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./mm/mmap.c:2920:3-6: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./mm/slab.c:1030:3-6: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./mm/vmstat.c:988:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+./mm/filemap.c:817:2-5: WARNING: Use BUG_ON instead of if condition followed by BUG.
+Please make sure the condition has no side effects (see conditional BUG_ON definition in include/asm-generic/bug.h)
+INFO: Tue Oct 24 14:26:33 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 40: /home/gmacario/linux-mainline/scripts/coccinelle/misc/cond_no_effect.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/misc/cond_no_effect.cocci --dir .
+./fs/kernfs/file.c:612:1-3: WARNING: possible condition with no effect (if == else)
+INFO: Tue Oct 24 14:28:25 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 41: /home/gmacario/linux-mainline/scripts/coccinelle/misc/cstptr.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/misc/cstptr.cocci --dir .
+./drivers/block/loop.c:723:8-15: ERROR: PTR_ERR applied after initialization to constant on line 715
+INFO: Tue Oct 24 14:28:51 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 42: /home/gmacario/linux-mainline/scripts/coccinelle/misc/doubleinit.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/misc/doubleinit.cocci --dir .
+INFO: Tue Oct 24 14:30:15 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 43: /home/gmacario/linux-mainline/scripts/coccinelle/misc/ifaddr.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/misc/ifaddr.cocci --dir .
+INFO: Tue Oct 24 14:31:26 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 44: /home/gmacario/linux-mainline/scripts/coccinelle/misc/ifcol.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/misc/ifcol.cocci --dir .
+./lib/scatterlist.c:299:4-39: code aligned with following code on line 301
+./drivers/hid/hid-core.c:2546:2-17: code aligned with following code on line 2551
+./init/initramfs.c:523:2-12: code aligned with following code on line 525
+INFO: Tue Oct 24 14:33:26 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 45: /home/gmacario/linux-mainline/scripts/coccinelle/misc/irqf_oneshot.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/misc/irqf_oneshot.cocci --dir .
+./drivers/usb/phy/phy-generic.c:303:8-33: ERROR: Threaded IRQ with no primary handler requested without IRQF_ONESHOT
+./kernel/irq/manage.c:1618:8-28: ERROR: Threaded IRQ with no primary handler requested without IRQF_ONESHOT
+INFO: Tue Oct 24 14:33:27 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 46: /home/gmacario/linux-mainline/scripts/coccinelle/misc/noderef.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/misc/noderef.cocci --dir .
+./drivers/usb/core/hcd.c:1362:38-44: ERROR: application of sizeof to pointer
+INFO: Tue Oct 24 14:37:17 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 47: /home/gmacario/linux-mainline/scripts/coccinelle/misc/of_table.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/misc/of_table.cocci --dir .
+INFO: Tue Oct 24 14:37:18 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 48: /home/gmacario/linux-mainline/scripts/coccinelle/misc/orplus.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/misc/orplus.cocci --dir .
+./lib/vsprintf.c:1681:33-34: WARNING: sum of probable bitmasks, consider |
+./lib/vsprintf.c:1688:33-34: WARNING: sum of probable bitmasks, consider |
+./lib/vsprintf.c:1691:34-35: WARNING: sum of probable bitmasks, consider |
+./lib/vsprintf.c:1694:32-33: WARNING: sum of probable bitmasks, consider |
+./arch/x86/boot/printf.c:86:23-24: WARNING: sum of probable bitmasks, consider |
+INFO: Tue Oct 24 14:40:28 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 49: /home/gmacario/linux-mainline/scripts/coccinelle/misc/returnvar.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/misc/returnvar.cocci --dir .
+./net/ipv4/tcp.c:2194:5-8: Unneeded variable: "err". Return "0" on line 2249
+./net/ipv4/route.c:2613:5-7: Unneeded variable: "rc". Return "0" on line 2660
+./net/ipv6/icmp.c:229:5-8: Unneeded variable: "err". Return "0" on line 262
+./drivers/mmc/core/sdio_bus.c:168:5-8: Unneeded variable: "ret". Return "0" on line 194
+./drivers/usb/core/hub.c:2117:5-8: Unneeded variable: "err". Return "0" on line 2119
+./drivers/input/serio/i8042.c:1088:6-11: Unneeded variable: "delay". Return "0" on line 1104
+./kernel/sched/core.c:5807:8-11: Unneeded variable: "ret". Return "0" on line 5819
+./fs/ext4/mballoc.c:3551:5-8: Unneeded variable: "err". Return "0" on line 3592
+INFO: Tue Oct 24 14:42:43 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 50: /home/gmacario/linux-mainline/scripts/coccinelle/misc/semicolon.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/misc/semicolon.cocci --dir .
+./drivers/acpi/acpica/nsalloc.c:319:2-3: Unneeded semicolon
+./kernel/smp.c:51:2-3: Unneeded semicolon
+./mm/oom_kill.c:220:3-4: Unneeded semicolon
+./mm/memcontrol.c:1229:4-5: Unneeded semicolon
+INFO: Tue Oct 24 14:43:56 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 51: /home/gmacario/linux-mainline/scripts/coccinelle/misc/warn.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/misc/warn.cocci --dir .
+./drivers/scsi/scsi_lib.c:3080:2-8: SUGGESTION: printk + WARN_ON can be just WARN
+./fs/dcache.c:1389:1-7: SUGGESTION: printk + WARN_ON can be just WARN
+./fs/jbd2/transaction.c:1413:3-9: SUGGESTION: printk + WARN_ON can be just WARN
+./fs/jbd2/transaction.c:271:2-8: SUGGESTION: printk + WARN_ON can be just WARN
+./arch/x86/mm/ioremap.c:98:2-8: SUGGESTION: printk + WARN_ON_ONCE can be just WARN_ONCE
+INFO: Tue Oct 24 14:44:14 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 52: /home/gmacario/linux-mainline/scripts/coccinelle/null/badzero.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/null/badzero.cocci --dir .
+INFO: Tue Oct 24 14:46:57 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 53: /home/gmacario/linux-mainline/scripts/coccinelle/null/deref_null.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/null/deref_null.cocci --dir .
+INFO: Tue Oct 24 15:13:27 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 54: /home/gmacario/linux-mainline/scripts/coccinelle/null/eno.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/null/eno.cocci --dir .
+INFO: Tue Oct 24 15:13:52 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 55: /home/gmacario/linux-mainline/scripts/coccinelle/null/kmerr.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/null/kmerr.cocci --dir .
+INFO: Tue Oct 24 15:19:24 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 56: /home/gmacario/linux-mainline/scripts/coccinelle/tests/doublebitand.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/tests/doublebitand.cocci --dir .
+./arch/x86/lib/inat-tables.c:214:10-20: duplicated argument to & or |
+./arch/x86/lib/inat-tables.c:214:23-33: duplicated argument to & or |
+./arch/x86/lib/inat-tables.c:218:10-20: duplicated argument to & or |
+./arch/x86/lib/inat-tables.c:218:23-33: duplicated argument to & or |
+./arch/x86/lib/inat-tables.c:293:10-20: duplicated argument to & or |
+./arch/x86/lib/inat-tables.c:709:10-20: duplicated argument to & or |
+./arch/x86/lib/inat-tables.c:710:10-20: duplicated argument to & or |
+./arch/x86/lib/inat-tables.c:841:10-20: duplicated argument to & or |
+./arch/x86/lib/inat-tables.c:842:10-20: duplicated argument to & or |
+./arch/x86/lib/inat-tables.c:1008:9-19: duplicated argument to & or |
+./arch/x86/lib/inat-tables.c:1009:9-19: duplicated argument to & or |
+./arch/x86/lib/inat-tables.c:92:10-20: duplicated argument to & or |
+./arch/x86/lib/inat-tables.c:196:10-42: duplicated argument to & or |
+./arch/x86/lib/inat-tables.c:197:10-41: duplicated argument to & or |
+./arch/x86/mm/init.c:39:31-32: duplicated argument to & or |
+./arch/x86/mm/init.c:49:16-17: duplicated argument to & or |
+./arch/x86/mm/init.c:49:27-28: duplicated argument to & or |
+./arch/x86/mm/init.c:50:27-28: duplicated argument to & or |
+./arch/x86/mm/init.c:51:16-17: duplicated argument to & or |
+./arch/x86/mm/init.c:53:16-17: duplicated argument to & or |
+INFO: Tue Oct 24 15:21:10 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 57: /home/gmacario/linux-mainline/scripts/coccinelle/tests/doubletest.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/tests/doubletest.cocci --dir .
+./drivers/usb/storage/usb.c:386:4-13: duplicated argument to && or ||
+./drivers/pci/pci.c:4753:6-10: duplicated argument to && or ||
+INFO: Tue Oct 24 15:22:22 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 58: /home/gmacario/linux-mainline/scripts/coccinelle/tests/odd_ptr_err.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/tests/odd_ptr_err.cocci --dir .
+INFO: Tue Oct 24 15:22:52 IST 2017: Command completed
+================================================================================================
+INFO: Applying SmPL 59: /home/gmacario/linux-mainline/scripts/coccinelle/tests/unsigned_lesser_than_zero.cocci
+INFO: Running spatch -D report --no-show-diff --very-quiet --cocci-file /home/gmacario/linux-mainline/scripts/coccinelle/tests/unsigned_lesser_than_zero.cocci --dir .
+INFO: Tue Oct 24 15:24:47 IST 2017: Command completed
+INFO: Tue Oct 24 15:24:47 IST 2017: Script end
